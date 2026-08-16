@@ -1,0 +1,20 @@
+# Agent run logs (local telemetry, never shared)
+.workcenter/
+
+# Node / build output (the web stack is not chosen yet; these are harmless now)
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
