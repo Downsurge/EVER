@@ -1,18 +1,28 @@
 import Image from "next/image";
+import type { MarketKey } from "@/data/markets";
+import { markets } from "@/data/markets";
 import styles from "./Wordmark.module.css";
 
-/**
- * Approved EVER wordmark asset from the supplied brand work.
- * The default asset is used on light surfaces; the reversed asset keeps the
- * colored V while converting the navy lettering to white for dark fields.
- */
 export function Wordmark({
+  market = "az",
   variant = "default",
   compact = false,
 }: {
+  market?: MarketKey;
   variant?: "default" | "reversed";
   compact?: boolean;
 }) {
+  const cfg = markets[market];
+
+  if (market === "tx") {
+    return (
+      <span className={`${styles.wordmark} ${styles.eperWordmark} ${variant === "reversed" ? styles.reversed : ""} ${compact ? styles.compact : ""}`}>
+        <strong className={styles.eperLetters}>EPER</strong>
+        <small>{cfg.brandName}</small>
+      </span>
+    );
+  }
+
   return (
     <span className={`${styles.wordmark} ${compact ? styles.compact : ""}`}>
       <Image

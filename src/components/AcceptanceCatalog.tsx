@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ItemCategory, statusLabel } from "@/data/accepted-items";
-import { routes } from "@/data/site";
+import type { MarketKey } from "@/data/markets";
+import { marketRoutes, markets } from "@/data/markets";
 import { ItemIcon } from "./ItemIcon";
 import styles from "./AcceptanceCatalog.module.css";
 
@@ -10,12 +11,14 @@ function groupLabel(status: string) {
   return "Not currently accepted";
 }
 
-export function AcceptanceCatalog({ categories }: { categories: readonly ItemCategory[] }) {
+export function AcceptanceCatalog({ categories, market }: { categories: readonly ItemCategory[]; market: MarketKey }) {
+  const routes = marketRoutes(market);
+  const cfg = markets[market];
   const groups = [
     {
       key: "standard",
       title: "Standard electronics",
-      note: "Items EVER can route through the normal electronics stream under the published policy.",
+      note: `Items ${cfg.brandShort} can route through the normal electronics stream under the published policy.`,
       items: categories.filter((c) => c.policy.value.status === "accepted-no-fee"),
     },
     {
@@ -27,7 +30,7 @@ export function AcceptanceCatalog({ categories }: { categories: readonly ItemCat
     {
       key: "not-accepted",
       title: "Not currently accepted",
-      note: "Streams outside EVER’s current operating scope. The card shows the next useful route when one is known.",
+      note: `Streams outside ${cfg.brandShort}’s current operating scope. The card shows the next useful route when one is known.`,
       items: categories.filter((c) => c.policy.value.status === "not-accepted"),
     },
   ].filter((group) => group.items.length);

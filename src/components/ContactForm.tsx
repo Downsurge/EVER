@@ -1,9 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import type { MarketKey } from "@/data/markets";
+import { markets } from "@/data/markets";
 import styles from "./ContactForm.module.css";
 
-export function ContactForm({ initialSubject = "" }: { initialSubject?: string }) {
+export function ContactForm({ market, initialSubject = "" }: { market: MarketKey; initialSubject?: string }) {
+  const cfg = markets[market];
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -21,6 +24,7 @@ export function ContactForm({ initialSubject = "" }: { initialSubject?: string }
       subject: String(form.get("subject") ?? "").trim(),
       message: String(form.get("message") ?? "").trim(),
       website: String(form.get("website") ?? "").trim(),
+      market,
     };
 
     try {
@@ -33,7 +37,7 @@ export function ContactForm({ initialSubject = "" }: { initialSubject?: string }
       if (!response.ok) throw new Error(data?.error || "We couldn't send your message.");
 
       setStatus("success");
-      setMessage("Message sent. EVER can follow up using the information you provided.");
+      setMessage(`Message sent. ${cfg.brandShort} can follow up using the information you provided.`);
       formElement.reset();
     } catch (error) {
       setStatus("error");

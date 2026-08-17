@@ -15,3 +15,41 @@
   height: auto;
   object-fit: contain;
 }
+
+.eperWordmark {
+  display: grid;
+  gap: .08rem;
+  width: auto;
+  min-width: 11rem;
+  line-height: 1;
+}
+
+.eperLetters {
+  display: block;
+  width: fit-content;
+  color: var(--ever-navy);
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  font-weight: 950;
+  letter-spacing: -.055em;
+  background: linear-gradient(100deg, var(--ever-navy) 0 28%, var(--ever-brand-blue) 44%, var(--ever-brand-cyan) 62%, var(--ever-brand-lime) 76%, var(--ever-navy) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eperWordmark small {
+  color: var(--ever-navy);
+  font-size: .54rem;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.eperWordmark.reversed .eperLetters {
+  background: linear-gradient(100deg, #fff 0 28%, var(--ever-brand-blue) 44%, var(--ever-brand-cyan) 62%, var(--ever-brand-lime) 76%, #fff 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.eperWordmark.reversed small { color: rgba(255,255,255,.82); }

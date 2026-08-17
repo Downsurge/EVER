@@ -7,6 +7,7 @@
  */
 
 import { Fact, drafted, isPublishable, operatorSupplied } from "./verification";
+import type { MarketKey } from "./markets";
 
 export const serviceAreaStatement: Fact<string> = operatorSupplied(
   "EVER serves Arizona's East Valley plus Phoenix and Florence.",
@@ -19,6 +20,7 @@ export type CityCoverage = {
 };
 
 export type City = {
+  readonly market: MarketKey;
   readonly slug: string;
   readonly name: string;
   readonly county: string;
@@ -30,14 +32,20 @@ export type City = {
   readonly neighbors: readonly string[];
 };
 
-const pickupCoverage = (): CityCoverage => ({
+const pickupCoverage = (market: MarketKey = "az"): CityCoverage => ({
   residentialDropOff: operatorSupplied(
-    { available: true, destination: "Contact EVER for current drop-off instructions." },
-    "Operator confirmation, 2026-08-17: free drop-off is available for eligible electronics; no public street address supplied yet.",
+    market === "az"
+      ? { available: true, destination: "Contact EVER for current drop-off instructions." }
+      : { available: true, destination: "Contact EPER for current handoff instructions." },
+    market === "az"
+      ? "Operator confirmation, 2026-08-17: free drop-off is available for eligible Arizona electronics; no public street address supplied yet."
+      : "EPER market copied from the shared electronics-recycling site structure. El Paso handoff details must be confirmed locally before scheduling.",
   ),
   commercialPickup: operatorSupplied(
     { available: true },
-    "Commercial/business pickup is part of EVER's Arizona service model.",
+    market === "az"
+      ? "Commercial/business pickup is part of EVER's Arizona service model."
+      : "Commercial/business pickup requests are enabled for EPER; pricing and scheduling are confirmed per load.",
   ),
 });
 
@@ -55,6 +63,7 @@ const cityCopy = (
 
 export const cities: readonly City[] = [
   {
+    market: "az",
     slug: "gilbert",
     name: "Gilbert",
     county: "Maricopa County",
@@ -76,6 +85,7 @@ export const cities: readonly City[] = [
     neighbors: ["chandler", "mesa", "queen-creek", "phoenix"],
   },
   {
+    market: "az",
     slug: "chandler",
     name: "Chandler",
     county: "Maricopa County",
@@ -97,6 +107,7 @@ export const cities: readonly City[] = [
     neighbors: ["gilbert", "mesa", "tempe", "phoenix"],
   },
   {
+    market: "az",
     slug: "queen-creek",
     name: "Queen Creek",
     county: "Maricopa County",
@@ -118,6 +129,7 @@ export const cities: readonly City[] = [
     neighbors: ["gilbert", "san-tan-valley", "florence", "chandler"],
   },
   {
+    market: "az",
     slug: "san-tan-valley",
     name: "San Tan Valley",
     county: "Pinal County",
@@ -139,6 +151,7 @@ export const cities: readonly City[] = [
     neighbors: ["queen-creek", "florence", "gilbert"],
   },
   {
+    market: "az",
     slug: "mesa",
     name: "Mesa",
     county: "Maricopa County",
@@ -160,6 +173,7 @@ export const cities: readonly City[] = [
     neighbors: ["gilbert", "tempe", "chandler", "phoenix"],
   },
   {
+    market: "az",
     slug: "tempe",
     name: "Tempe",
     county: "Maricopa County",
@@ -181,6 +195,7 @@ export const cities: readonly City[] = [
     neighbors: ["mesa", "chandler", "phoenix", "gilbert"],
   },
   {
+    market: "az",
     slug: "phoenix",
     name: "Phoenix",
     county: "Maricopa County",
@@ -202,6 +217,7 @@ export const cities: readonly City[] = [
     neighbors: ["tempe", "mesa", "chandler", "gilbert"],
   },
   {
+    market: "az",
     slug: "florence",
     name: "Florence",
     county: "Pinal County",
@@ -222,10 +238,32 @@ export const cities: readonly City[] = [
     ),
     neighbors: ["san-tan-valley", "queen-creek", "gilbert"],
   },
+  {
+    market: "tx",
+    slug: "el-paso",
+    name: "El Paso",
+    county: "El Paso County",
+    coverage: pickupCoverage("tx"),
+    ...cityCopy(
+      "Electronics Recycling El Paso TX | E-Waste Recycling | EPER",
+      "Electronics recycling in El Paso, TX for computers, laptops, servers, drives, TVs and business e-waste. Check accepted electronics and request pickup with EPER.",
+      [
+        "EPER is the El Paso market of ElectronicRecycle.net, focused on local electronics recycling for residents, businesses, schools, property managers, and organizations.",
+        "El Paso customers can check electronics online before making the trip, including computers, laptops, servers, networking equipment, drives, monitors, phones, printers, gaming systems, and other accepted e-waste.",
+        "Businesses can submit mixed electronics loads through the commercial pickup request. Exact EPER pickup pricing and local drop-off details should be confirmed before scheduling.",
+      ],
+      [
+        { question: "Where can I recycle electronics in El Paso, TX?", answer: "EPER provides an El Paso-specific electronics recycling experience on ElectronicRecycle.net. Check your item online and contact EPER for the current handoff or pickup route." },
+        { question: "Does EPER handle business electronics in El Paso?", answer: "Yes. Businesses can submit computers, laptops, servers, networking equipment, drives, monitors, printers, phones, and mixed office electronics for review and pickup planning." },
+        { question: "Can I recycle old computers and laptops in El Paso?", answer: "Yes. Computers, laptops, workstations, and many related components are part of the accepted electronics catalog." },
+      ],
+    ),
+    neighbors: [],
+  },
 ] as const;
 
-export function getCity(slug: string): City | undefined {
-  return cities.find((city) => city.slug === slug);
+export function getCity(market: MarketKey, slug: string): City | undefined {
+  return cities.find((city) => city.market === market && city.slug === slug);
 }
 
 export function isCityPublishable(city: City): boolean {
@@ -235,6 +273,12 @@ export function isCityPublishable(city: City): boolean {
   return hasActionablePath && hasApprovedCopy;
 }
 
-export function publishableCities(): readonly City[] {
-  return cities.filter(isCityPublishable);
+export function publishableCities(market?: MarketKey): readonly City[] {
+  return cities.filter((city) => (!market || city.market === market) && isCityPublishable(city));
+}
+
+export function marketServiceAreaStatement(market: MarketKey): string {
+  return market === "az"
+    ? "EVER serves Arizona's East Valley plus Phoenix and Florence."
+    : "EPER serves El Paso, Texas.";
 }

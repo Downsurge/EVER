@@ -12,6 +12,10 @@ node_modules/
 /build/
 /coverage/
 
+# Vercel CLI link state (projectId/orgId). Machine-specific, and Vercel's own
+# CLI expects this ignored so different clones can link to different projects.
+.vercel
+
 # Env and secrets
 .env
 .env.*
@@ -25,6 +29,3 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 *.swp
-
-.vercel
-.env*

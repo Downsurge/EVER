@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import type { MarketKey } from "@/data/markets";
+import { markets, marketRoutes } from "@/data/markets";
 import styles from "./BusinessLeadModal.module.css";
 
 export type BusinessBriefData = {
@@ -12,14 +14,18 @@ export type BusinessBriefData = {
 };
 
 export function BusinessLeadModal({
+  market,
   open,
   onClose,
   brief,
 }: {
+  market: MarketKey;
   open: boolean;
   onClose: () => void;
   brief: BusinessBriefData;
 }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -52,45 +58,20 @@ export function BusinessLeadModal({
     setStatus("sending");
     setMessage("");
 
-    const form = new FormData(event.currentTarget);
-    const payload = {
-      name: String(form.get("name") ?? "").trim(),
-      company: String(form.get("company") ?? "").trim(),
-      email: String(form.get("email") ?? "").trim(),
-      phone: String(form.get("phone") ?? "").trim(),
-      zip: String(form.get("zip") ?? "").trim(),
-      notes: String(form.get("notes") ?? "").trim(),
-      website: String(form.get("website") ?? "").trim(),
-      brief,
-    };
+    const form = new FormData(formElement);
+    form.set("market", market);
+    form.set("brief", JSON.stringify(brief));
 
     try {
-      const response = await fetch("/api/business-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
+      const response = await fetch("/api/business-lead", { method: "POST", body: form });
       const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(
-          typeof data?.error === "string"
-            ? data.error
-            : "We couldn't send the request right now.",
-        );
-      }
-
+      if (!response.ok) throw new Error(typeof data?.error === "string" ? data.error : "We couldn't send the request right now.");
       setStatus("success");
-      setMessage("Your pickup request was sent. EVER can follow up using the contact information you provided.");
+      setMessage(`Your pickup request was sent. ${cfg.brandShort} can follow up using the contact information you provided.`);
       formElement.reset();
     } catch (error) {
       setStatus("error");
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "We couldn't send the request right now.",
-      );
+      setMessage(error instanceof Error ? error.message : "We couldn't send the request right now.");
     }
   }
 
@@ -171,15 +152,21 @@ export function BusinessLeadModal({
                 <textarea name="notes" rows={4} placeholder="Access instructions, timing, unusual equipment, etc." />
               </label>
 
+              <label>
+                <span>Photos or inventory list</span>
+                <input name="attachments" type="file" multiple accept="image/*,.csv,.xlsx,.xls,.pdf,.txt" />
+                <small>Optional. Upload up to 5 photos, a CSV/Excel inventory, PDF, or text list. Keep each file under 5 MB.</small>
+              </label>
+
               <label className={styles.honeypot} aria-hidden="true">
                 Website
                 <input name="website" tabIndex={-1} autoComplete="off" />
               </label>
 
               <p className={styles.legal}>
-                By submitting, you agree that EVER may contact you about this request.
-                See our <Link href="/privacy">Privacy Policy</Link>, <Link href="/terms">Terms</Link>,
-                and <Link href="/acceptance-policy">Acceptance Policy</Link>.
+                By submitting, you agree that {cfg.brandShort} may contact you about this request.
+                See our <Link href={routes.privacy}>Privacy Policy</Link>, <Link href={routes.terms}>Terms</Link>,
+                and <Link href={routes.acceptancePolicy}>Acceptance Policy</Link>.
               </p>
 
               {status === "error" ? <p className={styles.error} role="alert">{message}</p> : null}

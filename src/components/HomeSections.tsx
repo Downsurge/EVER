@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { routeStages } from "@/data/process";
-import { routes, services } from "@/data/site";
+import type { MarketKey } from "@/data/markets";
+import { markets, marketRoutes } from "@/data/markets";
 import { publishableCategories, statusLabel } from "@/data/accepted-items";
-import { cities, isCityPublishable, serviceAreaStatement } from "@/data/service-areas";
+import { publishableCities } from "@/data/service-areas";
 import { ItemIcon } from "./ItemIcon";
-import { veteranOwnership } from "@/data/trust";
-import { isPublishable } from "@/data/verification";
 import styles from "./HomeSections.module.css";
 
 function Arrow() {
@@ -29,7 +28,9 @@ function ProcessIcon({ kind }: { kind: string }) {
   return <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">{shapes[kind]}</svg>;
 }
 
-export function QuickAnswerScene() {
+export function QuickAnswerScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   const categories = publishableCategories().slice(0, 8);
   return (
     <section className={styles.quick} aria-labelledby="quick-heading">
@@ -61,7 +62,9 @@ export function QuickAnswerScene() {
   );
 }
 
-export function EquipmentVisualScene() {
+export function EquipmentVisualScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   const visuals = [
     { src: "/brand/device-phone.svg", label: "Phones & tablets", href: `${routes.residential}?item=phones-tablets` },
     { src: "/brand/device-monitor.svg", label: "Monitors", href: `${routes.residential}?item=monitors` },
@@ -70,11 +73,11 @@ export function EquipmentVisualScene() {
   ];
 
   return (
-    <section className={styles.visualStrip} aria-label="Electronics EVER handles">
+    <section className={styles.visualStrip} aria-label={`Electronics ${cfg.brandShort} handles`}>
       <div className={`ever-shell ${styles.visualStripGrid}`}>
         {visuals.map((visual) => (
           <Link key={visual.label} href={visual.href} className={`${styles.visualStripCard} ever-reveal-soft`}>
-            <Image src={visual.src} alt={`${visual.label} accepted for electronics recycling with EVER`} width={320} height={220} className={styles.visualStripImage} />
+            <Image src={visual.src} alt={`${visual.label} accepted for electronics recycling with ${cfg.brandShort}`} width={320} height={220} className={styles.visualStripImage} />
             <span>{visual.label}</span>
           </Link>
         ))}
@@ -83,15 +86,16 @@ export function EquipmentVisualScene() {
   );
 }
 
-export function CommercialScene() {
-  if (!isPublishable(services.businessPickup)) return null;
+export function CommercialScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   return (
     <section className={styles.commercial} aria-labelledby="commercial-heading">
       <div className={styles.commercialGridLine} aria-hidden="true" />
       <div className={`ever-shell ${styles.commercialGrid}`}>
         <div className="ever-reveal">
           <h2 id="commercial-heading" className={styles.commercialHeading}>Business electronic pickup.</h2>
-          <p className={styles.commercialCopy}>Free commercial pickup starts at 10 qualifying items. Smaller loads can use drop-off or a distance-based pickup. EVER helps route equipment toward recovery, reuse, or recycling.</p>
+          <p className={styles.commercialCopy}>{market === "az" ? "Free commercial pickup starts at 10 qualifying items. Smaller loads can use drop-off or a distance-based pickup." : "Commercial pickup is reviewed by equipment type, quantity, access, and location before scheduling."} {cfg.brandShort} helps route equipment toward recovery, reuse, or recycling.</p>
           <Link className={styles.lightAction} href={routes.business}>Plan a pickup <Arrow /></Link>
         </div>
 
@@ -122,15 +126,16 @@ export function CommercialScene() {
   );
 }
 
-export function RouteScene() {
-  if (!isPublishable(routeStages)) return null;
+export function RouteScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   const stages = routeStages.value;
   return (
     <section className={styles.route} id="process" aria-labelledby="route-heading">
       <div className="ever-shell">
         <div className={styles.routeHeader}>
           <div className="ever-reveal">
-            <h2 id="route-heading" className="ever-section-title">How EVER handles electronics.</h2>
+            <h2 id="route-heading" className="ever-section-title">How {cfg.brandShort} handles electronics.</h2>
           </div>
           <p className={`ever-lede ${styles.routeLede}`}>Every item is evaluated before it is reused, recovered for parts, or recycled.</p>
         </div>
@@ -153,13 +158,15 @@ export function RouteScene() {
   );
 }
 
-export function ValueRecoveryScene() {
+export function ValueRecoveryScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   return (
     <section className={styles.value} aria-labelledby="value-heading">
       <div className={`ever-shell ${styles.valueGrid}`}>
         <div className="ever-reveal">
           <h2 id="value-heading" className="ever-section-title">Recover value before recycling.</h2>
-          <p className="ever-lede">Eligible servers, laptops, networking equipment, and components may still hold value. EVER evaluates first instead of assuming every item belongs in one bulk stream.</p>
+          <p className="ever-lede">Eligible servers, laptops, networking equipment, and components may still hold value. {cfg.brandShort} evaluates first instead of assuming every item belongs in one bulk stream.</p>
           <p className={styles.valueCaveat}>Evaluation is not a promise of payment. Some equipment is worth recovering, and plenty is not.</p>
         </div>
 
@@ -191,54 +198,53 @@ export function ValueRecoveryScene() {
               </div>
             </div>
           </div>
-          <p className={styles.compareNote}>EVER&rsquo;s approach keeps more options open until the equipment has actually been evaluated.</p>
+          <p className={styles.compareNote}>{cfg.brandShort}&rsquo;s approach keeps more options open until the equipment has actually been evaluated.</p>
         </div>
       </div>
     </section>
   );
 }
 
-export function LocalServiceScene() {
-  if (!isPublishable(serviceAreaStatement)) return null;
+export function LocalServiceScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   return (
     <section className={styles.local} aria-labelledby="local-heading">
       <div className={`ever-shell ${styles.localGrid}`}>
         <div className="ever-reveal">
-          <h2 id="local-heading" className="ever-section-title">Electronics recycling across the East Valley, Phoenix & Florence.</h2>
-          <p className="ever-lede">EVER serves Gilbert, Chandler, Queen Creek, San Tan Valley, Mesa, Tempe, Phoenix, and Florence with electronic recycling, e-waste pickup, and business electronics recycling options.</p>
+          <h2 id="local-heading" className="ever-section-title">Electronics recycling in {cfg.regionShort}.</h2>
+          <p className="ever-lede">{cfg.brandShort} serves {cfg.serviceAreaSummary} with electronic recycling, e-waste pickup, and business electronics recycling options.</p>
           <div className={styles.serviceActions}>
             <Link href={routes.residential}>Check an item <Arrow /></Link>
             <Link href={routes.business}>Business pickup <Arrow /></Link>
           </div>
         </div>
 
-        <div className={`${styles.citySchematic} ever-reveal`} aria-label="EVER Arizona electronics recycling service areas">
+        <div className={`${styles.citySchematic} ever-reveal`} aria-label={`${cfg.brandShort} electronics recycling service areas`}>
           <span className={styles.schematicLineA} aria-hidden="true" />
           <span className={styles.schematicLineB} aria-hidden="true" />
-          {cities.map((city) => {
+          {publishableCities(market).map((city) => {
             const content = <><span className={styles.cityDot} aria-hidden="true"/><strong>{city.name}</strong><small>{city.county}</small></>;
-            return isCityPublishable(city) ? (
-              <Link key={city.slug} href={`/areas/${city.slug}`} className={styles.cityNode} data-city={city.slug}>{content}</Link>
-            ) : (
-              <div key={city.slug} className={styles.cityNode} data-city={city.slug}>{content}</div>
-            );
+            return <Link key={city.slug} href={`${routes.home}/${city.slug}`} className={styles.cityNode} data-city={city.slug}>{content}</Link>;
           })}
-          <div className={styles.schematicBadge}><span>EVER</span><small>ARIZONA</small></div>
+          <div className={styles.schematicBadge}><span>{cfg.brandShort}</span><small>{cfg.stateAbbr}</small></div>
         </div>
       </div>
     </section>
   );
 }
 
-export function TrustScene() {
+export function TrustScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   const items = [
-    isPublishable(veteranOwnership) ? { title: veteranOwnership.value.label, detail: "Veteran owned and operated in Arizona.", icon: "★" } : null,
+    { title: "Veteran owned & operated", detail: `Locally operated for ${cfg.regionShort}.`, icon: "★" },
     { title: "Clear acceptance rules", detail: "The item checker shows the published policy in one place.", icon: "✓" },
-    isPublishable(services.businessPickup) ? { title: "Business pickup", detail: "Commercial equipment can start with a structured pickup brief.", icon: "→" } : null,
-  ].filter(Boolean) as {title:string; detail:string; icon:string}[];
+    { title: "Business pickup", detail: "Commercial equipment can start with a structured pickup brief.", icon: "→" },
+  ];
 
   return (
-    <section className={styles.trust} aria-label="Why EVER">
+    <section className={styles.trust} aria-label={`Why ${cfg.brandShort}`}>
       <div className={`ever-shell ${styles.trustGrid}`}>
         {items.map((item) => (
           <div key={item.title} className={`${styles.trustItem} ever-reveal-soft`}>
@@ -251,7 +257,9 @@ export function TrustScene() {
   );
 }
 
-export function FinalDecisionScene() {
+export function FinalDecisionScene({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
+  const routes = marketRoutes(market);
   return (
     <section className={styles.final} aria-labelledby="final-heading">
       <div className={styles.finalCircuit} aria-hidden="true" />

@@ -1,0 +1,10 @@
+import Image from "next/image";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getMarket,isMarketKey } from "@/data/markets";
+import styles from "../../service.module.css";
+// Tuple typed, not string[][]: with `noUncheckedIndexedAccess` on, indexing a
+// string[][] hands back `string | undefined`, which next/image rejects.
+const visuals: ReadonlyArray<readonly [string, string]>=[['/brand/device-laptop.svg','Laptops & notebooks'],['/brand/device-server.svg','Servers & rack equipment'],['/brand/device-network.svg','Networking equipment'],['/brand/device-drives.svg','Hard drives & SSDs'],['/brand/device-monitor.svg','Monitors & displays'],['/brand/device-components.svg','Computer components'],['/brand/device-printer.svg','Printers & scanners'],['/brand/device-phone.svg','Phones & tablets']];
+export async function generateMetadata({params}:{params:Promise<{market:string}>}):Promise<Metadata>{const{market}=await params;const cfg=getMarket(market);if(!cfg)return{};return{title:`Electronics Recycling Equipment Gallery | ${cfg.marketLabel} | ${cfg.brandShort}`,description:`Examples of electronics categories handled by ${cfg.brandShort} for recycling and pickup.`,alternates:{canonical:`/${market}/gallery`}}}
+export default async function Page({params}:{params:Promise<{market:string}>}){const{market}=await params;if(!isMarketKey(market))notFound();const cfg=getMarket(market)!;return <div className={styles.page}><section className={styles.hero}><div className="ever-shell"><h1>Electronics we work with.</h1><p>This visual gallery shows equipment categories, not staged customer projects. Real pickup and facility photography can replace these illustrations as the local operation builds its project library.</p></div></section><section className={styles.body}><div className="ever-shell"><div className={styles.cityLinks}>{visuals.map(([src,label])=><figure key={label} style={{margin:0}}><Image src={src} alt={`${label} for electronics recycling with ${cfg.brandShort}`} width={320} height={220}/><figcaption style={{fontWeight:800,marginTop:'.5rem'}}>{label}</figcaption></figure>)}</div></div></section></div>}

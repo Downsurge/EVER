@@ -4,6 +4,8 @@ import { useState } from "react";
 import { BusinessLeadModal } from "./BusinessLeadModal";
 import { ItemIcon } from "./ItemIcon";
 import type { IconKey } from "@/data/accepted-items";
+import type { MarketKey } from "@/data/markets";
+import { markets } from "@/data/markets";
 import styles from "./PickupBrief.module.css";
 
 type AssetOption = {
@@ -40,7 +42,8 @@ const priorityOptions = [
   "Recurring pickups",
 ] as const;
 
-export function PickupBrief() {
+export function PickupBrief({ market }: { market: MarketKey }) {
+  const cfg = markets[market];
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [assets, setAssets] = useState<string[]>([]);
   const [quantity, setQuantity] = useState("");
@@ -48,13 +51,15 @@ export function PickupBrief() {
   const [leadOpen, setLeadOpen] = useState(false);
 
   const briefReady = Boolean(assets.length && quantity && priorities.length);
-  const pickupNote = !quantity
-    ? "Choose a quantity to see pickup eligibility."
-    : quantity === "1–9 items"
-      ? "Under 10 qualifying items: free drop-off is available, or pickup may have a distance-based fee."
-      : quantity === "Not sure yet"
-        ? "EVER will confirm whether the load qualifies for free commercial pickup."
-        : "This quantity may qualify for free commercial pickup when the load includes at least 10 qualifying items.";
+  const pickupNote = market === "tx"
+    ? (!quantity ? "Choose a quantity so EPER can review the pickup." : "EPER will confirm pickup availability and any fee based on the equipment, quantity, and location.")
+    : !quantity
+      ? "Choose a quantity to see pickup eligibility."
+      : quantity === "1–9 items"
+        ? "Under 10 qualifying items: free drop-off is available, or pickup may have a distance-based fee."
+        : quantity === "Not sure yet"
+          ? `${cfg.brandShort} will confirm whether the load qualifies for free commercial pickup.`
+          : "This quantity may qualify for free commercial pickup when the load includes at least 10 qualifying items.";
 
   function toggleAsset(label: string) {
     setAssets((current) =>
@@ -279,6 +284,7 @@ export function PickupBrief() {
       </aside>
 
       <BusinessLeadModal
+        market={market}
         open={leadOpen}
         onClose={() => setLeadOpen(false)}
         brief={{ assets, quantity, priorities, pickupNote }}

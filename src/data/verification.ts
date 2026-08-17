@@ -61,7 +61,18 @@ export function placeholder<T>(value: T, source: string): Fact<T> {
  * vision calls out, because a visitor cannot tell it from a real one.
  */
 export function isPublishable<T>(fact: Fact<T>): boolean {
-  return fact.status === "verified" || fact.status === "operator-supplied";
+  return (
+    fact.status === "verified" ||
+    fact.status === "operator-supplied" ||
+    // `drafted` renders by design: the operator asked for working policy and
+    // copy rather than empty pages. It is tracked as the status most needing
+    // sign-off, and `npm run facts` lists every instance.
+    //
+    // This line was missing when `drafted` was introduced, which silently
+    // 404'd every city page: their titles and descriptions are drafted, and
+    // `isCityPublishable` requires publishable copy.
+    fact.status === "drafted"
+  );
 }
 
 /** The value if publishable, otherwise null. Callers must handle null. */
