@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MarketSelector } from "./MarketSelector";
+import { getGalleryImages } from "@/lib/gallery";
 
 export const metadata: Metadata = {
   title: "Electronics Recycling Locations | Arizona & Texas | ElectronicRecycle.net",
@@ -15,5 +16,7 @@ export default function HomePage() {
     url: "https://electronicrecycle.net",
     description: "Local electronics recycling websites for Arizona and Texas markets.",
   };
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} /><MarketSelector /></>;
+  // Read on the server and passed down, so the client never touches node:fs
+  // and cannot compute a different list than the HTML was built with.
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} /><MarketSelector gallery={getGalleryImages()} /></>;
 }

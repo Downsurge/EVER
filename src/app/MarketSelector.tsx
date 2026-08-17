@@ -2,7 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { GalleryStrip } from "@/components/GalleryStrip";
 import { PARENT_LOGO_SRC } from "@/lib/brand-paths";
+import type { GalleryImage } from "@/lib/gallery";
 import styles from "./selector.module.css";
 
 const choices = [
@@ -10,7 +12,7 @@ const choices = [
   { key: "tx", brand: "EPER", name: "El Paso Electronic Recycle", title: "El Paso", state: "Texas", cities: "El Paso · West Texas" },
 ] as const;
 
-export function MarketSelector() {
+export function MarketSelector({ gallery = [] }: { gallery?: readonly GalleryImage[] }) {
   const [last, setLast] = useState<string | null>(null);
   useEffect(() => setLast(window.localStorage.getItem("electronicRecycleMarket")), []);
   function remember(key: string) { window.localStorage.setItem("electronicRecycleMarket", key); }
@@ -47,6 +49,8 @@ export function MarketSelector() {
         </Link>)}
       </div>
       <p className={styles.note}>You can change locations anytime from the site header.</p>
+      {/* Renders only when public/gallery actually has images in it. */}
+      <GalleryStrip images={gallery} />
     </div>
   </main>;
 }
