@@ -17,11 +17,17 @@ import { join } from "node:path";
  * a fatal build error. Read it in a server component and pass the result down.
  */
 
-const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"];
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".svg"];
 
 export type GalleryImage = {
   /** Public URL, e.g. /gallery/01-truck.jpg */
   readonly src: string;
+  /**
+   * Line art needs to be shown whole; a photograph should fill its frame.
+   * Cropping an illustration cuts the drawing, and letterboxing a photo
+   * wastes the frame, so the fit follows the file type.
+   */
+  readonly fit: "cover" | "contain";
   /**
    * Alt text derived from the filename: `01-loading-dock.jpg` becomes
    * "Loading dock". Rename a file to improve its alt text.
@@ -50,7 +56,11 @@ export function getGalleryImages(): readonly GalleryImage[] {
     return readdirSync(dir)
       .filter((name) => IMAGE_EXTENSIONS.some((ext) => name.toLowerCase().endsWith(ext)))
       .sort((a, b) => a.localeCompare(b, "en", { numeric: true }))
-      .map((name) => ({ src: `/gallery/${name}`, alt: altFromFilename(name) }));
+      .map((name) => ({
+        src: `/gallery/${name}`,
+        alt: altFromFilename(name),
+        fit: name.toLowerCase().endsWith(".svg") ? ("contain" as const) : ("cover" as const),
+      }));
   } catch {
     // Folder missing is the normal empty state, not an error.
     return [];

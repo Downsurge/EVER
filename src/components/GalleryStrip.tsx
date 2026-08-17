@@ -6,16 +6,21 @@ import type { GalleryImage } from "@/lib/gallery";
 import styles from "./GalleryStrip.module.css";
 
 /**
- * A horizontal strip of photos, scrolled by the visitor.
+ * A slideshow strip. Advances on its own, and stays polite about it.
  *
- * Deliberately NOT an auto-playing carousel. EVER_WEBSITE_VISION.md rules out
- * indefinitely looping decoration, and an auto-advancing slider takes control
- * away from someone still reading. This scrolls on drag, wheel, arrow keys,
- * and the two buttons, snapping to each image.
+ * EVER_WEBSITE_VISION.md rules out decoration that loops forever, so this is
+ * bounded on every side that matters:
+ *   - it stops permanently the moment the visitor scrolls, drags or uses the
+ *     buttons, because they have taken over and it should get out of the way,
+ *   - it pauses on hover and on keyboard focus anywhere inside,
+ *   - it pauses when the tab is hidden, rather than animating to nobody,
+ *   - it does not run at all under prefers-reduced-motion,
+ *   - it never runs when everything already fits on screen.
  *
  * Renders nothing at all when the folder is empty, rather than showing an
  * empty frame.
  */
+const ADVANCE_MS = 4500;
 export function GalleryStrip({ images }: { images: readonly GalleryImage[] }) {
   const trackRef = useRef<HTMLUListElement>(null);
   // Few enough images to fit on screen means the arrows have nothing to do.
@@ -23,6 +28,11 @@ export function GalleryStrip({ images }: { images: readonly GalleryImage[] }) {
   // so they are disabled until the track actually overflows. Recomputed on
   // resize, because a narrower window can make the same set scrollable.
   const [canScroll, setCanScroll] = useState(false);
+
+  // Set once the visitor takes control. Never unset: having the slideshow
+  // resume under someone who is reading is worse than it never starting.
+  const [surrendered, setSurrendered] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -34,18 +44,51 @@ export function GalleryStrip({ images }: { images: readonly GalleryImage[] }) {
     return () => observer.disconnect();
   }, [images.length]);
 
+  // Pause while the tab is in the background.
+  useEffect(() => {
+    const onVisibility = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
+  useEffect(() => {
+    if (!canScroll || surrendered || paused) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    const id = window.setInterval(() => {
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      track.scrollTo({
+        left: atEnd ? 0 : track.scrollLeft + track.clientWidth * 0.8,
+        behavior: "smooth",
+      });
+    }, ADVANCE_MS);
+
+    return () => window.clearInterval(id);
+  }, [canScroll, surrendered, paused]);
+
   if (images.length === 0) return null;
 
   const scrollBy = (direction: 1 | -1) => {
     const track = trackRef.current;
     if (!track) return;
+    setSurrendered(true);
     // One "page" is roughly the visible width, so a click advances a screenful
     // rather than a fixed pixel count that would be wrong on other viewports.
     track.scrollBy({ left: direction * track.clientWidth * 0.8, behavior: "smooth" });
   };
 
   return (
-    <section className={styles.strip} aria-labelledby="gallery-heading">
+    <section
+      className={styles.strip}
+      aria-labelledby="gallery-heading"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
       <div className={styles.head}>
         <h2 id="gallery-heading" className={styles.heading}>
           Around the operation
@@ -80,6 +123,10 @@ export function GalleryStrip({ images }: { images: readonly GalleryImage[] }) {
         tabIndex={0}
         role="group"
         aria-label="Photo strip, scrollable"
+        // Any manual scroll, including a drag or a wheel, hands control over.
+        onPointerDown={() => setSurrendered(true)}
+        onWheel={() => setSurrendered(true)}
+        onKeyDown={() => setSurrendered(true)}
       >
         {images.map((image) => (
           <li key={image.src} className={styles.item}>
@@ -89,6 +136,7 @@ export function GalleryStrip({ images }: { images: readonly GalleryImage[] }) {
               fill
               sizes="(min-width: 64em) 22rem, 70vw"
               className={styles.image}
+              data-fit={image.fit}
             />
           </li>
         ))}
