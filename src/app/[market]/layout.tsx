@@ -30,6 +30,21 @@ export default async function MarketLayout({ children, params }: { children: Rea
     url: `https://electronicrecycle.net/${market}`,
     ...(market === "az" ? { logo: "https://electronicrecycle.net/brand/ever-logo.png" } : {}),
     ...(cfg.phone ? { telephone: cfg.phone } : {}), ...(cfg.email ? { email: cfg.email } : {}),
+    // A postal address is only emitted for a market that genuinely has one.
+    // Publishing an address in structured data is a strong local-search
+    // signal, and a wrong or invented one is correspondingly damaging.
+    ...(cfg.address
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: cfg.address.street,
+            addressLocality: cfg.address.city,
+            addressRegion: cfg.address.stateAbbr,
+            postalCode: cfg.address.postalCode,
+            addressCountry: "US",
+          },
+        }
+      : {}),
     areaServed: cities.map((city) => ({ "@type": "City", name: `${city.name}, ${cfg.state}` })),
   };
   return <>

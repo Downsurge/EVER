@@ -14,6 +14,17 @@ export type MarketConfig = {
   homepage: string;
   phone?: string;
   email?: string;
+  /**
+   * A real street address, only where the market actually has one. Arizona
+   * has no public yard yet, so it stays undefined there rather than being
+   * faked; anything reading this must handle its absence.
+   */
+  address?: {
+    street: string;
+    city: string;
+    stateAbbr: string;
+    postalCode: string;
+  };
   citiesLabel: string;
   serviceAreaSummary: string;
   ogImage: string;
@@ -52,6 +63,15 @@ export const markets: Record<MarketKey, MarketConfig> = {
     support:
       "Electronic recycling and e-waste service for El Paso homes and businesses, with clear item guidance, commercial pickup requests, and local recycling resources.",
     homepage: "/tx",
+    // Operator confirmation, 2026-08-17.
+    phone: "915-843-8854",
+    email: "elpaso@electronicrecycle.net",
+    address: {
+      street: "1700 Texas Ave",
+      city: "El Paso",
+      stateAbbr: "TX",
+      postalCode: "79901",
+    },
     citiesLabel: "Texas Service Area",
     serviceAreaSummary: "El Paso",
     ogImage: "/brand/ever-og.png",

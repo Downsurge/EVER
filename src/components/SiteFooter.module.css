@@ -133,3 +133,10 @@
   color: rgba(255,255,255,.7) !important;
   border: 1px solid rgba(255,255,255,.18);
 }
+
+/* Physical address, shown only for a market that has one. */
+.address {
+  font-style: normal;
+  margin-top: .55rem;
+  line-height: 1.5;
+}

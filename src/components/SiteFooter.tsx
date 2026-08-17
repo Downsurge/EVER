@@ -74,6 +74,14 @@ export function SiteFooter({ market }: { market: MarketKey }) {
             {cfg.phone ? <a href={`tel:${cfg.phone}`}>{cfg.phone}</a> : null}
             {cfg.email ? <a href={`mailto:${cfg.email}`}>{cfg.email}</a> : null}
           </div> : null}
+          {/* Only markets with a confirmed physical location show one. */}
+          {cfg.address ? (
+            <address className={styles.address}>
+              {cfg.address.street}
+              <br />
+              {cfg.address.city}, {cfg.address.stateAbbr} {cfg.address.postalCode}
+            </address>
+          ) : null}
           <Link href={routes.contact}>Contact {cfg.brandShort}</Link>
           <Link href="/" className={styles.changeMarket}>Change location</Link>
         </div>

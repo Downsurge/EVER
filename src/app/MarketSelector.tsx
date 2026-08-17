@@ -39,7 +39,11 @@ export function MarketSelector({ gallery = [] }: { gallery?: readonly GalleryIma
           className={styles.logoImage}
         />
       </div>
-      <div className={styles.intro}><p className={styles.kicker}>LOCAL ELECTRONICS RECYCLING</p><h1>Where are you recycling?</h1><p>Choose your local market. Each site has its own service area, contact information, pickup details, local SEO resources, and recycling guidance.</p></div>
+      {/* The explanatory paragraph that sat here has been removed. It told
+          visitors how the site is organised, and mentioned "local SEO
+          resources", which is our own vocabulary rather than theirs. The two
+          cards below already answer the question the heading asks. */}
+      <div className={styles.intro}><p className={styles.kicker}>LOCAL ELECTRONICS RECYCLING</p><h1>Where are you recycling?</h1></div>
       <div className={styles.choices}>
         {choices.map((choice) => <Link key={choice.key} href={`/${choice.key}`} onClick={() => remember(choice.key)} className={styles.card} data-last={last === choice.key ? "true" : "false"}>
           {last === choice.key ? <span className={styles.last}>Your last location</span> : null}
@@ -48,7 +52,6 @@ export function MarketSelector({ gallery = [] }: { gallery?: readonly GalleryIma
           <p>{choice.cities}</p><span className={styles.enter}>Enter {choice.brand} <b>→</b></span>
         </Link>)}
       </div>
-      <p className={styles.note}>You can change locations anytime from the site header.</p>
       {/* Renders only when public/gallery actually has images in it. */}
       <GalleryStrip images={gallery} />
     </div>
