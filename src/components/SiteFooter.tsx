@@ -7,10 +7,15 @@ import { isPublishable } from "@/data/verification";
 import styles from "./SiteFooter.module.css";
 
 const services = [
-  { label: "Recycle Electronics", href: "/recycle" },
-  { label: "Business Pickup", href: "/business" },
-  { label: "What We Accept", href: "/what-we-accept" },
-  { label: "FAQ", href: "/faq" },
+  { label: "Electronic Recycling", href: "/services/electronic-recycling" },
+  { label: "E-Waste Recycling", href: "/services/e-waste-recycling" },
+  { label: "Computer Recycling", href: "/services/computer-recycling" },
+  { label: "Laptop Recycling", href: "/services/laptop-recycling" },
+  { label: "TV Recycling", href: "/services/tv-recycling" },
+  { label: "Server Recycling", href: "/services/server-recycling" },
+  { label: "Hard Drive Recycling", href: "/services/hard-drive-recycling" },
+  { label: "Business Electronics", href: "/services/business-electronics-recycling" },
+  { label: "Electronics Pickup", href: "/services/electronics-pickup" },
 ] as const;
 
 const policies = [
@@ -29,7 +34,7 @@ export function SiteFooter() {
         <div className={styles.brandBlock}>
           <Wordmark variant="reversed" />
           <p>
-            Electronic recycling and commercial technology pickup across Arizona&rsquo;s East Valley.
+            Electronic recycling, e-waste recycling, and electronics pickup across Arizona&rsquo;s East Valley, Phoenix, and Florence.
           </p>
           {isPublishable(veteranOwned) ? (
             <Image src="/brand/veteran-owned-badge.png" alt={veteranOwned.value} width={360} height={464} className={styles.veteranBadge} />
@@ -39,6 +44,7 @@ export function SiteFooter() {
         <div className={styles.linkGroup}>
           <h2>Services</h2>
           <ul>
+            <li><Link href="/services">All Recycling Services</Link></li>
             {services.map((item) => (
               <li key={item.href}><Link href={item.href}>{item.label}</Link></li>
             ))}
@@ -48,6 +54,7 @@ export function SiteFooter() {
         <div className={styles.linkGroup}>
           <h2>Service Areas</h2>
           <ul className={styles.areaList}>
+            <li><Link href="/areas">All Service Areas</Link></li>
             {cities.filter(isCityPublishable).map((city) => (
               <li key={city.slug}><Link href={`/areas/${city.slug}`}>{city.name}</Link></li>
             ))}

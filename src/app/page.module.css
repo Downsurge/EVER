@@ -704,3 +704,31 @@
 .cityContactLine { margin-top:1rem !important; color:var(--ever-navy-muted) !important; font-size:.8rem; }
 .cityContactLine a { color:var(--ever-blue); text-decoration:none; font-weight:800; }
 .cityContactLine a:hover { text-decoration:underline; text-underline-offset:3px; }
+
+.cityServiceLinks {
+  display: grid;
+  gap: .6rem;
+  margin-top: 1rem;
+}
+
+.cityServiceLinks a {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding: .65rem .8rem;
+  border-radius: 10px;
+  background: var(--ever-surface-sunken);
+  color: var(--ever-navy);
+  text-decoration: none;
+  font-size: .8rem;
+  font-weight: 780;
+}
+
+.cityServiceLinks a:hover {
+  background: var(--ever-surface-blue);
+  color: var(--ever-blue-dark);
+}
+
+@media (min-width: 48em) {
+  .cityServiceLinks { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}

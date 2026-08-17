@@ -5,9 +5,9 @@ import { contact } from "@/data/site";
 import styles from "../page.module.css";
 
 export const metadata: Metadata = {
-  title: "Business Electronic Pickup | EVER",
-  description:
-    "Plan an East Valley commercial electronics pickup with EVER and build a clear brief for retired IT equipment.",
+  title: "Business Electronics Recycling & E-Waste Pickup | EVER",
+  description: "Commercial electronics recycling and e-waste pickup for computers, laptops, servers, drives and office technology. Free pickup with 10 qualifying items.",
+  alternates: { canonical: "/business" },
 };
 
 export default function BusinessPage() {

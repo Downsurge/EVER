@@ -5,6 +5,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Accessibility | EVER",
   description: "EVER's website accessibility statement for ElectronicRecycle.net.",
+  alternates: { canonical: "/accessibility" },
 };
 
 export default function AccessibilityPage() {

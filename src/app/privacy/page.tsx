@@ -5,6 +5,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Privacy Policy | EVER",
   description: "How EVER handles information submitted through ElectronicRecycle.net.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

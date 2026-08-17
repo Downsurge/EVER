@@ -7,9 +7,9 @@ import { contact } from "@/data/site";
 import styles from "../page.module.css";
 
 export const metadata: Metadata = {
-  title: "Recycle Electronics | EVER",
-  description:
-    "Check whether EVER handles your electronics and see the published next step for each item.",
+  title: "Electronics Recycling & E-Waste Drop-Off | EVER Arizona",
+  description: "Check electronics for recycling, e-waste drop-off, TV fees, computer recycling, laptop recycling and residential pickup with EVER in Arizona.",
+  alternates: { canonical: "/recycle" },
 };
 
 export default async function RecyclePage({

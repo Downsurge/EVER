@@ -4,9 +4,9 @@ import { publishableCategories } from "@/data/accepted-items";
 import styles from "../page.module.css";
 
 export const metadata: Metadata = {
-  title: "What EVER Accepts | Electronic Recycling",
-  description:
-    "The maintained source-of-truth list for electronics EVER accepts, handles with conditions, or does not currently accept.",
+  title: "Electronics We Accept | E-Waste Recycling | EVER Arizona",
+  description: "See which computers, laptops, servers, drives, monitors, TVs, phones, printers and other electronics EVER accepts for recycling and e-waste service.",
+  alternates: { canonical: "/what-we-accept" },
 };
 
 export default function WhatWeAcceptPage() {

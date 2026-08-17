@@ -74,7 +74,7 @@ export function EquipmentVisualScene() {
       <div className={`ever-shell ${styles.visualStripGrid}`}>
         {visuals.map((visual) => (
           <Link key={visual.label} href={visual.href} className={`${styles.visualStripCard} ever-reveal-soft`}>
-            <Image src={visual.src} alt="" width={320} height={220} className={styles.visualStripImage} />
+            <Image src={visual.src} alt={`${visual.label} accepted for electronics recycling with EVER`} width={320} height={220} className={styles.visualStripImage} />
             <span>{visual.label}</span>
           </Link>
         ))}
@@ -204,15 +204,15 @@ export function LocalServiceScene() {
     <section className={styles.local} aria-labelledby="local-heading">
       <div className={`ever-shell ${styles.localGrid}`}>
         <div className="ever-reveal">
-          <h2 id="local-heading" className="ever-section-title">Serving the East Valley.</h2>
-          <p className="ever-lede">EVER serves East Valley communities while keeping the experience simple: check residential items online and plan commercial pickups by city.</p>
+          <h2 id="local-heading" className="ever-section-title">Electronics recycling across the East Valley, Phoenix & Florence.</h2>
+          <p className="ever-lede">EVER serves Gilbert, Chandler, Queen Creek, San Tan Valley, Mesa, Tempe, Phoenix, and Florence with electronic recycling, e-waste pickup, and business electronics recycling options.</p>
           <div className={styles.serviceActions}>
             <Link href={routes.residential}>Check an item <Arrow /></Link>
             <Link href={routes.business}>Business pickup <Arrow /></Link>
           </div>
         </div>
 
-        <div className={`${styles.citySchematic} ever-reveal`} aria-label="EVER East Valley service areas">
+        <div className={`${styles.citySchematic} ever-reveal`} aria-label="EVER Arizona electronics recycling service areas">
           <span className={styles.schematicLineA} aria-hidden="true" />
           <span className={styles.schematicLineB} aria-hidden="true" />
           {cities.map((city) => {
@@ -223,7 +223,7 @@ export function LocalServiceScene() {
               <div key={city.slug} className={styles.cityNode} data-city={city.slug}>{content}</div>
             );
           })}
-          <div className={styles.schematicBadge}><span>EVER</span><small>EAST VALLEY</small></div>
+          <div className={styles.schematicBadge}><span>EVER</span><small>ARIZONA</small></div>
         </div>
       </div>
     </section>
@@ -232,7 +232,7 @@ export function LocalServiceScene() {
 
 export function TrustScene() {
   const items = [
-    isPublishable(veteranOwnership) ? { title: veteranOwnership.value.label, detail: "Locally operated in Arizona's East Valley.", icon: "★" } : null,
+    isPublishable(veteranOwnership) ? { title: veteranOwnership.value.label, detail: "Veteran owned and operated in Arizona.", icon: "★" } : null,
     { title: "Clear acceptance rules", detail: "The item checker shows the published policy in one place.", icon: "✓" },
     isPublishable(services.businessPickup) ? { title: "Business pickup", detail: "Commercial equipment can start with a structured pickup brief.", icon: "→" } : null,
   ].filter(Boolean) as {title:string; detail:string; icon:string}[];

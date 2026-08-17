@@ -5,6 +5,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Terms of Service | EVER",
   description: "Terms governing use of ElectronicRecycle.net and EVER website requests.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

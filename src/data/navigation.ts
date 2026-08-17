@@ -8,6 +8,7 @@ export type NavItem = {
 
 export const primaryNav: readonly NavItem[] = [
   { label: "Recycle", href: routes.residential, published: true },
+  { label: "Services", href: "/services", published: true },
   { label: "Business", href: routes.business, published: true },
   { label: "What We Accept", href: routes.whatWeAccept, published: true },
 ] as const;

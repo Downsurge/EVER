@@ -31,7 +31,7 @@ export const brand = {
    * policy source before launch.
    */
   support: operatorSupplied(
-    "Free local drop-off for most electronics, free commercial pickup with 10 qualifying items, and residential pickup available for a distance-based fee.",
+    "Electronic recycling and e-waste service across the East Valley, Phoenix, and Florence, with free drop-off for most accepted electronics, qualifying commercial pickup, and residential pickup.",
     "Operator direction, 2026-08-17.",
   ),
 } as const;

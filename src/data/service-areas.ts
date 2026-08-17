@@ -1,28 +1,20 @@
 /**
- * EVER East Valley service-area content.
+ * EVER service-area content.
  *
- * East Valley city pages describe the service area, commercial pickup,
- * residential pickup, and free drop-off availability without inventing a
- * street address that has not been supplied for publication.
+ * City pages describe pickup/drop-off availability without inventing a street
+ * address. Each page has distinct local copy so the service-area architecture
+ * helps users rather than acting as duplicated doorway pages.
  */
 
-import {
-  Fact,
-  drafted,
-  isPublishable,
-  operatorSupplied,
-} from "./verification";
+import { Fact, drafted, isPublishable, operatorSupplied } from "./verification";
 
 export const serviceAreaStatement: Fact<string> = operatorSupplied(
-  "EVER serves Arizona's East Valley.",
-  "The operator defined the East Valley as EVER's service area and requested a page for each serviced city.",
+  "EVER serves Arizona's East Valley plus Phoenix and Florence.",
+  "Operator-defined service area, 2026-08-17.",
 );
 
 export type CityCoverage = {
-  readonly residentialDropOff: Fact<{
-    readonly available: boolean;
-    readonly destination: string;
-  }>;
+  readonly residentialDropOff: Fact<{ readonly available: boolean; readonly destination: string }>;
   readonly commercialPickup: Fact<{ readonly available: boolean }>;
 };
 
@@ -34,9 +26,7 @@ export type City = {
   readonly pageTitle: Fact<string>;
   readonly metaDescription: Fact<string>;
   readonly localNotes: Fact<readonly string[]>;
-  readonly localQuestions: Fact<
-    readonly { readonly question: string; readonly answer: string }[]
-  >;
+  readonly localQuestions: Fact<readonly { readonly question: string; readonly answer: string }[]>;
   readonly neighbors: readonly string[];
 };
 
@@ -47,7 +37,7 @@ const pickupCoverage = (): CityCoverage => ({
   ),
   commercialPickup: operatorSupplied(
     { available: true },
-    "Commercial/business pickup is part of EVER's East Valley operating model.",
+    "Commercial/business pickup is part of EVER's Arizona service model.",
   ),
 });
 
@@ -57,10 +47,10 @@ const cityCopy = (
   notes: readonly string[],
   questions: readonly { question: string; answer: string }[],
 ) => ({
-  pageTitle: drafted(title, "City-specific SEO/editorial copy drafted for the operator's requested service-area page."),
-  metaDescription: drafted(meta, "City-specific SEO/editorial copy drafted for the operator's requested service-area page."),
-  localNotes: drafted(notes, "City-specific copy; contains no physical-location claim."),
-  localQuestions: drafted(questions, "City-specific FAQ copy using operator-confirmed pickup policies while avoiding invented hours, addresses, or certifications."),
+  pageTitle: drafted(title, "Unique city SEO title drafted for the requested service-area page."),
+  metaDescription: drafted(meta, "Unique city SEO description drafted for the requested service-area page."),
+  localNotes: drafted(notes, "Unique local service content; contains no invented storefront, address, hours, or certification claim."),
+  localQuestions: drafted(questions, "City-specific FAQ copy using operator-confirmed pickup and acceptance policies."),
 });
 
 export const cities: readonly City[] = [
@@ -70,49 +60,20 @@ export const cities: readonly City[] = [
     county: "Maricopa County",
     coverage: pickupCoverage(),
     ...cityCopy(
-      "Electronic Recycling & Business Pickup in Gilbert, AZ | EVER",
-      "EVER serves Gilbert businesses with commercial electronic pickup and gives residents a clear online item-checking path for old electronics.",
+      "Electronics Recycling Gilbert AZ | E-Waste Pickup | EVER",
+      "Electronics recycling in Gilbert, AZ for computers, laptops, servers, TVs and e-waste. Free drop-off for most accepted items and pickup options from EVER.",
       [
-        "Gilbert is part of EVER's core East Valley commercial pickup area.",
-        "Free drop-off is available for eligible electronics. Contact EVER for current drop-off instructions; residential pickup is also available for a distance-based fee.",
+        "Gilbert is part of EVER's core East Valley electronics recycling and e-waste pickup area.",
+        "Residents can check individual electronics online, use free drop-off for most accepted items, or request residential pickup priced by distance.",
+        "Gilbert businesses with at least 10 qualifying electronics may qualify for free commercial pickup for computers, laptops, servers, networking equipment, drives, monitors, and other accepted technology.",
       ],
       [
-        {
-          question: "Does EVER offer business electronic pickup in Gilbert?",
-          answer: "Yes. Gilbert is within EVER's defined East Valley commercial pickup area. Build a pickup brief with the equipment type, quantity, and priorities.",
-        },
-        {
-          question: "Does EVER offer residential pickup in Gilbert?",
-          answer: "Yes. Residential pickup is available with a fee based on distance. Free drop-off is available for eligible electronics; contact EVER for current drop-off instructions.",
-        },
+        { question: "Where can I recycle electronics in Gilbert, AZ?", answer: "EVER serves Gilbert for electronics recycling. Check your item online first, then use the current drop-off instructions or request pickup." },
+        { question: "Does EVER offer free business e-waste pickup in Gilbert?", answer: "Yes. Commercial pickup is free with at least 10 qualifying items. Smaller loads can use free drop-off or a distance-based pickup." },
+        { question: "Does EVER recycle TVs in Gilbert?", answer: "Flat-screen LED TVs are accepted for $15 per TV. CRT and tube televisions are not accepted." },
       ],
     ),
-    neighbors: ["mesa", "chandler", "queen-creek"],
-  },
-  {
-    slug: "mesa",
-    name: "Mesa",
-    county: "Maricopa County",
-    coverage: pickupCoverage(),
-    ...cityCopy(
-      "Mesa Business Electronic Pickup & E-Waste Answers | EVER",
-      "Mesa businesses can build an EVER commercial electronics pickup brief, while residents can check individual electronics online for the current handling path.",
-      [
-        "Mesa is part of EVER's East Valley pickup area for residential and commercial electronics.",
-        "Business loads can include mixed retired office technology; the pickup brief is designed to capture the mix before anyone schedules the next step.",
-      ],
-      [
-        {
-          question: "Can a Mesa business request electronics pickup?",
-          answer: "Yes. Commercial pickup is available in Mesa. Loads with at least 10 qualifying items may qualify for free pickup.",
-        },
-        {
-          question: "Can Mesa residents check whether EVER handles a TV or computer?",
-          answer: "Yes. The residential item checker publishes the current acceptance route by item type.",
-        },
-      ],
-    ),
-    neighbors: ["gilbert", "tempe", "chandler"],
+    neighbors: ["chandler", "mesa", "queen-creek", "phoenix"],
   },
   {
     slug: "chandler",
@@ -120,24 +81,20 @@ export const cities: readonly City[] = [
     county: "Maricopa County",
     coverage: pickupCoverage(),
     ...cityCopy(
-      "Chandler IT Equipment Recovery & Electronic Pickup | EVER",
-      "EVER provides Chandler businesses an organized path for retired computers, servers, networking equipment, monitors, and mixed office electronics.",
+      "Electronics Recycling Chandler AZ | E-Waste Pickup | EVER",
+      "Recycle computers, laptops, servers, hard drives and electronics in Chandler, AZ. EVER offers free drop-off, residential pickup and qualifying business pickup.",
       [
-        "Chandler commercial loads can start with the pickup brief so EVER can review the equipment mix and quantity before scheduling.",
-        "Equipment that may still have reuse or recovery value can be evaluated before the remaining material is routed toward recycling.",
+        "Chandler electronics recycling customers can use EVER for accepted computers, laptops, servers, networking hardware, drives, monitors, printers, phones, gaming systems, and related e-waste.",
+        "Residential pickup in Chandler is available for a fee based on distance, while free drop-off is available for most accepted electronics.",
+        "Chandler companies replacing office computers or IT equipment can submit one commercial pickup request; 10 qualifying items may qualify for free pickup.",
       ],
       [
-        {
-          question: "What should a Chandler company include in a pickup request?",
-          answer: "Start with equipment categories, a rough item count, and priorities such as fast removal, data-bearing devices, asset inventory, or value recovery.",
-        },
-        {
-          question: "Does EVER promise resale value on retired Chandler equipment?",
-          answer: "No. Eligible equipment can be evaluated, but evaluation is not a promise that an item has resale value or that a payment will result.",
-        },
+        { question: "Can I recycle old computers in Chandler?", answer: "Yes. Desktops, workstations, laptops, servers, drives, networking equipment, and many computer components are accepted under EVER's current policy." },
+        { question: "Is residential electronics pickup available in Chandler?", answer: "Yes. Residential pickup is available with a fee based on distance." },
+        { question: "Can a Chandler business recycle a full IT closet?", answer: "Yes. Build a commercial pickup brief with the equipment mix and quantity. Ten or more qualifying items may qualify for free pickup." },
       ],
     ),
-    neighbors: ["gilbert", "mesa", "tempe"],
+    neighbors: ["gilbert", "mesa", "tempe", "phoenix"],
   },
   {
     slug: "queen-creek",
@@ -145,49 +102,20 @@ export const cities: readonly City[] = [
     county: "Maricopa County",
     coverage: pickupCoverage(),
     ...cityCopy(
-      "Queen Creek Electronic Recycling & Commercial Pickup | EVER",
-      "EVER extends commercial electronic pickup to Queen Creek and gives residents a direct way to check the current route for old electronics.",
+      "Electronics Recycling Queen Creek AZ | E-Waste Pickup | EVER",
+      "Electronics and e-waste recycling in Queen Creek, AZ. Free drop-off for most accepted electronics, residential pickup and business electronics pickup from EVER.",
       [
-        "Queen Creek businesses can use the same structured EVER pickup workflow as the rest of the East Valley.",
-        "Queen Creek residents can use free drop-off for eligible electronics or request residential pickup with a distance-based fee.",
+        "Queen Creek residents can check accepted electronics before leaving home, including computers, laptops, phones, monitors, printers, gaming systems, cables, and flat-screen TVs.",
+        "Free drop-off is available for most accepted electronics; LED TVs are $15 each and CRT televisions are not accepted.",
+        "Queen Creek businesses can request mixed office-electronics or IT-equipment pickup. Loads with at least 10 qualifying items may qualify for free commercial pickup.",
       ],
       [
-        {
-          question: "Is Queen Creek in EVER's business pickup area?",
-          answer: "Yes. Queen Creek is one of the East Valley cities included in EVER's commercial pickup area.",
-        },
-        {
-          question: "Does EVER offer residential pickup in Queen Creek?",
-          answer: "Yes. Residential pickup is available with a fee based on distance. Contact EVER with your ZIP code and items for pricing.",
-        },
+        { question: "Does EVER pick up electronics in Queen Creek?", answer: "Yes. Residential pickup is available for a distance-based fee, and qualifying business loads may receive free commercial pickup." },
+        { question: "Is electronics drop-off free for Queen Creek residents?", answer: "Drop-off is free for most accepted electronics. Item-specific fees still apply where published, including $15 per LED TV." },
+        { question: "Does EVER take tube TVs in Queen Creek?", answer: "No. CRT and tube televisions are not accepted." },
       ],
     ),
-    neighbors: ["gilbert", "san-tan-valley"],
-  },
-  {
-    slug: "tempe",
-    name: "Tempe",
-    county: "Maricopa County",
-    coverage: pickupCoverage(),
-    ...cityCopy(
-      "Tempe Business Electronics Pickup & Technology Recovery | EVER",
-      "EVER serves Tempe commercial electronics loads with a pickup-first workflow built around equipment type, quantity, data needs, and recovery priorities.",
-      [
-        "Tempe business requests are routed through EVER's commercial workflow, which is designed for mixed technology rather than one-item consumer disposal.",
-        "Tempe residents can check individual items online, use free drop-off for eligible electronics, or request residential pickup.",
-      ],
-      [
-        {
-          question: "How does a Tempe business start with EVER?",
-          answer: "Use the business page to build a three-step pickup brief. It records the equipment mix, rough quantity, and the priorities for the load.",
-        },
-        {
-          question: "Can a Tempe resident still use EVER's website?",
-          answer: "Yes. The item checker is available for residents who want to see the current published route for a specific electronic item.",
-        },
-      ],
-    ),
-    neighbors: ["mesa", "chandler"],
+    neighbors: ["gilbert", "san-tan-valley", "florence", "chandler"],
   },
   {
     slug: "san-tan-valley",
@@ -195,24 +123,104 @@ export const cities: readonly City[] = [
     county: "Pinal County",
     coverage: pickupCoverage(),
     ...cityCopy(
-      "San Tan Valley Electronic Pickup & Recycling Answers | EVER",
-      "EVER includes San Tan Valley in its East Valley commercial pickup area and provides an item-by-item online route for residential electronics.",
+      "Electronics Recycling San Tan Valley AZ | E-Waste | EVER",
+      "Recycle electronics and e-waste in San Tan Valley, AZ. EVER offers accepted-item drop-off, distance-based residential pickup and business electronics pickup.",
       [
-        "San Tan Valley is included in EVER's East Valley commercial and residential pickup coverage.",
-        "Free drop-off is available for eligible electronics; contact EVER for current instructions or residential pickup pricing.",
+        "San Tan Valley is included in EVER's electronics recycling and pickup coverage for homes and businesses.",
+        "Residents can recycle accepted computers, laptops, phones, monitors, drives, printers, networking equipment, gaming systems, and more through EVER's published item policy.",
+        "Commercial electronics loads with at least 10 qualifying items may qualify for free pickup in San Tan Valley; smaller loads can use drop-off or request distance-based pickup.",
       ],
       [
-        {
-          question: "Will EVER pick up commercial electronics in San Tan Valley?",
-          answer: "Yes. San Tan Valley is included in EVER's defined East Valley business pickup area.",
-        },
-        {
-          question: "Does EVER offer residential pickup in San Tan Valley?",
-          answer: "Yes. Residential pickup is available with a distance-based fee. Contact EVER with your ZIP code and item list for pricing.",
-        },
+        { question: "Does EVER serve San Tan Valley for e-waste recycling?", answer: "Yes. EVER provides electronics recycling options and pickup service in San Tan Valley." },
+        { question: "How much is residential electronics pickup in San Tan Valley?", answer: "Residential pickup pricing depends on distance. Send your ZIP code and item list to EVER for pricing." },
+        { question: "Can San Tan Valley businesses get free electronics pickup?", answer: "Yes, when the load includes at least 10 qualifying items." },
       ],
     ),
-    neighbors: ["queen-creek"],
+    neighbors: ["queen-creek", "florence", "gilbert"],
+  },
+  {
+    slug: "mesa",
+    name: "Mesa",
+    county: "Maricopa County",
+    coverage: pickupCoverage(),
+    ...cityCopy(
+      "Electronics Recycling Mesa AZ | E-Waste Pickup | EVER",
+      "Electronics recycling in Mesa, AZ for computers, laptops, servers, TVs, drives and e-waste. EVER offers drop-off plus residential and commercial pickup.",
+      [
+        "Mesa customers can use EVER for computer recycling, laptop recycling, server recycling, hard-drive recycling, monitor recycling, LED TV recycling, and other accepted e-waste.",
+        "Most accepted electronics can use free drop-off. Residential pickup is available for a distance-based fee.",
+        "Mesa businesses with retired computers, servers, networking gear, drives, monitors, printers, phones, and mixed office electronics can request commercial pickup; 10 qualifying items may qualify for free pickup.",
+      ],
+      [
+        { question: "Where can I recycle a computer in Mesa?", answer: "EVER serves Mesa for computer and electronics recycling. Desktops, laptops, servers, hard drives and many components are accepted under the current policy." },
+        { question: "Does EVER recycle LED TVs in Mesa?", answer: "Yes. Flat-screen LED TVs are $15 per television. CRT televisions are not accepted." },
+        { question: "Is business electronics pickup available in Mesa?", answer: "Yes. Commercial pickup is available, and loads with at least 10 qualifying items may qualify for free pickup." },
+      ],
+    ),
+    neighbors: ["gilbert", "tempe", "chandler", "phoenix"],
+  },
+  {
+    slug: "tempe",
+    name: "Tempe",
+    county: "Maricopa County",
+    coverage: pickupCoverage(),
+    ...cityCopy(
+      "Electronics Recycling Tempe AZ | E-Waste Pickup | EVER",
+      "Electronics recycling and e-waste pickup in Tempe, AZ for laptops, computers, servers, drives, monitors and office technology. Residential pickup available.",
+      [
+        "Tempe businesses can use EVER for office electronics recycling, computer equipment recycling, server recycling, hard-drive recycling, and mixed commercial e-waste pickup.",
+        "Commercial pickup is free with at least 10 qualifying items. Smaller Tempe business loads can use free drop-off or request distance-based pickup.",
+        "Tempe residents can check individual items online and choose free drop-off for most accepted electronics or residential pickup based on distance.",
+      ],
+      [
+        { question: "Does EVER offer business e-waste pickup in Tempe?", answer: "Yes. Commercial electronics pickup is available in Tempe, with free pickup for loads containing at least 10 qualifying items." },
+        { question: "Can Tempe residents recycle laptops and computers with EVER?", answer: "Yes. Laptops, desktops, workstations, servers, drives and many computer components are accepted." },
+        { question: "Can EVER pick electronics up from a Tempe residence?", answer: "Yes. Residential pickup is available for a fee based on distance." },
+      ],
+    ),
+    neighbors: ["mesa", "chandler", "phoenix", "gilbert"],
+  },
+  {
+    slug: "phoenix",
+    name: "Phoenix",
+    county: "Maricopa County",
+    coverage: pickupCoverage(),
+    ...cityCopy(
+      "Electronics Recycling Phoenix AZ | E-Waste Pickup | EVER",
+      "Phoenix electronics recycling for computers, laptops, servers, drives, monitors, TVs and e-waste, with residential and commercial pickup from EVER.",
+      [
+        "EVER extends electronics recycling and pickup service into Phoenix for customers who need an alternative to East Valley-only options.",
+        "Phoenix residents can check electronics online, then use drop-off for accepted items or request residential pickup with pricing based on distance.",
+        "Phoenix businesses can request computer recycling, server recycling, networking equipment recycling, drive recycling, and mixed office e-waste pickup. Ten qualifying items may qualify for free commercial pickup.",
+      ],
+      [
+        { question: "Does EVER provide electronics recycling service in Phoenix?", answer: "Yes. EVER serves Phoenix for residential and commercial electronics recycling and pickup." },
+        { question: "Can a Phoenix business get free e-waste pickup?", answer: "Yes, when the commercial load contains at least 10 qualifying items." },
+        { question: "Does EVER offer TV recycling in Phoenix?", answer: "Yes for flat-screen LED TVs at $15 per TV. CRT and tube televisions are not accepted." },
+      ],
+    ),
+    neighbors: ["tempe", "mesa", "chandler", "gilbert"],
+  },
+  {
+    slug: "florence",
+    name: "Florence",
+    county: "Pinal County",
+    coverage: pickupCoverage(),
+    ...cityCopy(
+      "Electronics Recycling Florence AZ | E-Waste Pickup | EVER",
+      "Electronics recycling and e-waste pickup in Florence, AZ. EVER handles accepted computers, laptops, servers, drives, monitors and business electronics.",
+      [
+        "EVER serves Florence customers who need electronics recycling, e-waste pickup, computer recycling, or business technology removal beyond the central East Valley.",
+        "Florence residents can check accepted items online and request pickup based on distance. Free drop-off remains available for most accepted electronics when drop-off is the better option.",
+        "Florence businesses can submit mixed electronics loads for pickup. Commercial loads with at least 10 qualifying items may qualify for free pickup.",
+      ],
+      [
+        { question: "Does EVER serve Florence, Arizona for electronics recycling?", answer: "Yes. Florence is included in EVER's residential and commercial electronics recycling service area." },
+        { question: "Can EVER pick up electronics from a Florence home?", answer: "Yes. Residential pickup is available, with pricing based on distance." },
+        { question: "Does EVER offer commercial e-waste pickup in Florence?", answer: "Yes. Ten or more qualifying items may qualify for free commercial pickup." },
+      ],
+    ),
+    neighbors: ["san-tan-valley", "queen-creek", "gilbert"],
   },
 ] as const;
 
@@ -223,11 +231,7 @@ export function getCity(slug: string): City | undefined {
 export function isCityPublishable(city: City): boolean {
   const pickup = city.coverage.commercialPickup;
   const hasActionablePath = isPublishable(pickup) && pickup.value.available;
-  const hasApprovedCopy =
-    isPublishable(city.pageTitle) &&
-    city.pageTitle.value.trim() !== "" &&
-    isPublishable(city.metaDescription) &&
-    city.metaDescription.value.trim() !== "";
+  const hasApprovedCopy = isPublishable(city.pageTitle) && city.pageTitle.value.trim() !== "" && isPublishable(city.metaDescription) && city.metaDescription.value.trim() !== "";
   return hasActionablePath && hasApprovedCopy;
 }
 

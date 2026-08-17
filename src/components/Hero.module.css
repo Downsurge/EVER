@@ -30,6 +30,15 @@
   align-items: flex-start;
 }
 
+.seoEyebrow {
+  margin: 0 0 1rem;
+  color: var(--ever-cyan-ink);
+  font-size: .74rem;
+  font-weight: 850;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
 .eyebrow { margin-bottom: 1.15rem; }
 
 .headline {

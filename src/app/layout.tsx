@@ -22,10 +22,10 @@ export const viewport: Viewport = { themeColor: "#0b1b34" };
 export const metadata: Metadata = {
   metadataBase: new URL("https://electronicrecycle.net"),
   title: "EVER | East Valley Electronic Recycle",
-  description: "Electronic recycling, free drop-off for most accepted electronics, and commercial or residential pickup across Arizona's East Valley.",
+  description: "Electronic recycling, e-waste recycling, computer recycling, and residential or commercial electronics pickup across Gilbert, Chandler, Queen Creek, San Tan Valley, Mesa, Tempe, Phoenix, and Florence, Arizona.",
   icons: { icon: "/icon.png", shortcut: "/icon.png", apple: "/icon.png" },
-  openGraph: { type:"website", siteName:"EVER — East Valley Electronic Recycle", title:"EVER | East Valley Electronic Recycle", description:"Electronic recycling and pickup across Arizona's East Valley.", images:[{url:"/brand/ever-social-circle.png",width:1254,height:1254,alt:"EVER — East Valley Electronic Recycle"}] },
-  twitter: { card:"summary_large_image", title:"EVER | East Valley Electronic Recycle", description:"Electronic recycling and pickup across Arizona's East Valley.", images:["/brand/ever-social-circle.png"] },
+  openGraph: { type:"website", siteName:"EVER — East Valley Electronic Recycle", title:"EVER | East Valley Electronic Recycle", description:"Electronic recycling and e-waste pickup across Arizona's East Valley, Phoenix, and Florence.", images:[{url:"/brand/ever-og.png",width:1200,height:630,alt:"EVER electronic recycling and e-waste pickup in Arizona"}] },
+  twitter: { card:"summary_large_image", title:"EVER | East Valley Electronic Recycle", description:"Electronic recycling and e-waste pickup across Arizona's East Valley, Phoenix, and Florence.", images:["/brand/ever-og.png"] },
 };
 
 export default function RootLayout({
@@ -43,10 +43,20 @@ export default function RootLayout({
     email: contact.email.value,
     areaServed: publishableCities().map((city) => ({ "@type": "City", name: `${city.name}, Arizona` })),
   };
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "EVER — East Valley Electronic Recycle",
+    alternateName: "EVER",
+    url: "https://electronicrecycle.net",
+    description: "Electronic recycling and e-waste pickup for Arizona homes and businesses.",
+    publisher: { "@type": "Organization", name: "EVER — East Valley Electronic Recycle" },
+  };
   return (
     <html lang="en">
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <a className="ever-skip-link" href="#main">
           Skip to main content
         </a>

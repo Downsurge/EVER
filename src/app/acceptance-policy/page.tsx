@@ -5,6 +5,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Acceptance Policy | EVER",
   description: "Rules that apply when electronics are handed to EVER for recycling or recovery.",
+  alternates: { canonical: "/acceptance-policy" },
 };
 
 export default function AcceptancePolicyPage() {

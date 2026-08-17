@@ -7,6 +7,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Contact EVER",
   description: "Contact EVER about electronic recycling, business pickup, privacy, or accessibility.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage({

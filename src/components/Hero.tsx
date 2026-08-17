@@ -20,6 +20,7 @@ export function Hero() {
       <div className={styles.topGlow} aria-hidden="true" />
       <div className={`ever-shell ${styles.grid}`}>
         <div className={styles.editorial}>
+          <p className={styles.seoEyebrow}>Electronic Recycling &amp; E-Waste Pickup in Arizona</p>
           <h1 id="hero-heading" className={`ever-display ${styles.headline}`}>
             <span>{headline.line1}</span>
             <span className={styles.accentLine}>{headline.line2}</span>
