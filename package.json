@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "facts": "node scripts/facts.mjs"
+    "facts": "node scripts/facts.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "indexnow:all": "node scripts/indexnow.mjs --sitemap"
   },
   "dependencies": {
     "next": "^16.0.0",
