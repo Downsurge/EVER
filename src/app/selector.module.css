@@ -32,3 +32,50 @@
 .logoImage {
   object-fit: contain;
 }
+
+/* The card is a container; this link is the primary target and stretches to
+   cover it, so the whole card stays clickable while the contact details
+   below remain their own real links. */
+.cardLink {
+  display: grid;
+  gap: .55rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+}
+
+/* Phone and email. Bold, and lifted above the stretched link so they are
+   tappable rather than swallowed by it. */
+.cardContact {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.1rem;
+  margin-top: .9rem;
+  padding-top: .9rem;
+  border-top: 1px solid rgba(11, 27, 52, .1);
+}
+
+.cardContact a {
+  font-weight: 800;
+  font-size: .92rem;
+  color: var(--ever-navy);
+  text-decoration: none;
+  /* Comfortable tap target without disturbing the card rhythm. */
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cardContact a:hover {
+  color: var(--ever-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GalleryStrip } from "@/components/GalleryStrip";
+import { markets } from "@/data/markets";
 import { PARENT_LOGO_SRC } from "@/lib/brand-paths";
 import type { GalleryImage } from "@/lib/gallery";
 import styles from "./selector.module.css";
@@ -44,13 +45,37 @@ export function MarketSelector({ gallery = [] }: { gallery?: readonly GalleryIma
           resources", which is our own vocabulary rather than theirs. The two
           cards below already answer the question the heading asks. */}
       <div className={styles.intro}><p className={styles.kicker}>LOCAL ELECTRONICS RECYCLING</p><h1>Where are you recycling?</h1></div>
+      {/* Each card is a container rather than one big <Link>, because the
+          phone and email inside have to be real tel: and mailto: links and an
+          anchor cannot be nested inside another anchor. The card link still
+          covers the whole card via a stretched ::after, so clicking anywhere
+          except the contact details still enters the market. */}
       <div className={styles.choices}>
-        {choices.map((choice) => <Link key={choice.key} href={`/${choice.key}`} onClick={() => remember(choice.key)} className={styles.card} data-last={last === choice.key ? "true" : "false"}>
-          {last === choice.key ? <span className={styles.last}>Your last location</span> : null}
-          <span className={styles.state}>{choice.state}</span><strong className={styles.market}>{choice.title}</strong>
-          <div className={styles.localBrand}><b>{choice.brand}</b><span>{choice.name}</span></div>
-          <p>{choice.cities}</p><span className={styles.enter}>Enter {choice.brand} <b>→</b></span>
-        </Link>)}
+        {choices.map((choice) => {
+          const cfg = markets[choice.key];
+          return (
+            <div key={choice.key} className={styles.card} data-last={last === choice.key ? "true" : "false"}>
+              {last === choice.key ? <span className={styles.last}>Your last location</span> : null}
+              <Link
+                href={`/${choice.key}`}
+                onClick={() => remember(choice.key)}
+                className={styles.cardLink}
+              >
+                <span className={styles.state}>{choice.state}</span>
+                <strong className={styles.market}>{choice.title}</strong>
+                <div className={styles.localBrand}><b>{choice.brand}</b><span>{choice.name}</span></div>
+                <p>{choice.cities}</p>
+                <span className={styles.enter}>Enter {choice.brand} <b>→</b></span>
+              </Link>
+              {(cfg.phone || cfg.email) ? (
+                <div className={styles.cardContact}>
+                  {cfg.phone ? <a href={`tel:${cfg.phone}`}>{cfg.phone}</a> : null}
+                  {cfg.email ? <a href={`mailto:${cfg.email}`}>{cfg.email}</a> : null}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
       {/* Renders only when public/gallery actually has images in it. */}
       <GalleryStrip images={gallery} />
