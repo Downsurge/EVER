@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BusinessLeadModal } from "./BusinessLeadModal";
+import { trackEvent } from "@/lib/analytics";
 import { ItemIcon } from "./ItemIcon";
 import type { IconKey } from "@/data/accepted-items";
 import type { MarketKey } from "@/data/markets";
@@ -139,7 +140,7 @@ export function PickupBrief({ market }: { market: MarketKey }) {
               </div>
               <div className={styles.navRow}>
                 <span />
-                <button type="button" className={styles.next} disabled={!assets.length} onClick={() => setStep(2)}>
+                <button type="button" className={styles.next} disabled={!assets.length} onClick={() => { setStep(2); trackEvent("pickup_brief", { market, stage: "step_2", assets: assets.length }); }}>
                   Next: quantity <span aria-hidden="true">→</span>
                 </button>
               </div>
@@ -208,6 +209,8 @@ export function PickupBrief({ market }: { market: MarketKey }) {
                 })}
               </div>
               <div className={styles.navRow}>
+                {/* Going back is not progress. Tracking it as reaching step 2
+                    would inflate the funnel with people retreating. */}
                 <button type="button" className={styles.back} onClick={() => setStep(2)}>← Back</button>
                 <span className={styles.readyState} data-ready={briefReady}>
                   {briefReady ? "Brief ready" : "Choose at least one priority"}
@@ -267,7 +270,7 @@ export function PickupBrief({ market }: { market: MarketKey }) {
         <div className={styles.briefFooter}>
           {briefReady ? (
             <>
-              <button type="button" className={styles.send} onClick={() => setLeadOpen(true)}>
+              <button type="button" className={styles.send} onClick={() => { setLeadOpen(true); trackEvent("pickup_brief", { market, stage: "send_opened", assets: assets.length, quantity, priorities: priorities.length }); }}>
                 Send pickup request
               </button>
               <p>

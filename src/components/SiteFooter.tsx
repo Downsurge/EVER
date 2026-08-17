@@ -4,6 +4,7 @@ import type { MarketKey } from "@/data/markets";
 import { markets, marketRoutes } from "@/data/markets";
 import { publishableCities } from "@/data/service-areas";
 import { Wordmark } from "./Wordmark";
+import { TrackedLink } from "./TrackedLink";
 import styles from "./SiteFooter.module.css";
 
 const serviceSlugs = [
@@ -71,8 +72,8 @@ export function SiteFooter({ market }: { market: MarketKey }) {
           <h2>Need help?</h2>
           <p>Questions about an item, a business load, pickup, or website accessibility.</p>
           {(cfg.phone || cfg.email) ? <div className={styles.contactList}>
-            {cfg.phone ? <a href={`tel:${cfg.phone}`}>{cfg.phone}</a> : null}
-            {cfg.email ? <a href={`mailto:${cfg.email}`}>{cfg.email}</a> : null}
+            {cfg.phone ? <TrackedLink href={`tel:${cfg.phone}`} external event="contact_click" props={{ market, method: "phone", location: "footer" }}>{cfg.phone}</TrackedLink> : null}
+            {cfg.email ? <TrackedLink href={`mailto:${cfg.email}`} external event="contact_click" props={{ market, method: "email", location: "footer" }}>{cfg.email}</TrackedLink> : null}
           </div> : null}
           {/* Only markets with a confirmed physical location show one. */}
           {cfg.address ? (

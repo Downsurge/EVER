@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GalleryStrip } from "@/components/GalleryStrip";
 import { markets } from "@/data/markets";
+import { trackEvent } from "@/lib/analytics";
 import { PARENT_LOGO_SRC } from "@/lib/brand-paths";
 import type { GalleryImage } from "@/lib/gallery";
 import styles from "./selector.module.css";
@@ -16,7 +17,10 @@ const choices = [
 export function MarketSelector({ gallery = [] }: { gallery?: readonly GalleryImage[] }) {
   const [last, setLast] = useState<string | null>(null);
   useEffect(() => setLast(window.localStorage.getItem("electronicRecycleMarket")), []);
-  function remember(key: string) { window.localStorage.setItem("electronicRecycleMarket", key); }
+  function remember(key: string) {
+    window.localStorage.setItem("electronicRecycleMarket", key);
+    trackEvent("market_selected", { market: key, returning: last === key });
+  }
   return <main id="main" className={styles.page}>
     <div className={styles.glow} aria-hidden="true" />
     <div className={styles.shell}>
@@ -69,8 +73,22 @@ export function MarketSelector({ gallery = [] }: { gallery?: readonly GalleryIma
               </Link>
               {(cfg.phone || cfg.email) ? (
                 <div className={styles.cardContact}>
-                  {cfg.phone ? <a href={`tel:${cfg.phone}`}>{cfg.phone}</a> : null}
-                  {cfg.email ? <a href={`mailto:${cfg.email}`}>{cfg.email}</a> : null}
+                  {cfg.phone ? (
+                    <a
+                      href={`tel:${cfg.phone}`}
+                      onClick={() => trackEvent("contact_click", { market: choice.key, method: "phone", location: "market_selector" })}
+                    >
+                      {cfg.phone}
+                    </a>
+                  ) : null}
+                  {cfg.email ? (
+                    <a
+                      href={`mailto:${cfg.email}`}
+                      onClick={() => trackEvent("contact_click", { market: choice.key, method: "email", location: "market_selector" })}
+                    >
+                      {cfg.email}
+                    </a>
+                  ) : null}
                 </div>
               ) : null}
             </div>

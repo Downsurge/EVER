@@ -6,6 +6,7 @@ import { ItemIcon } from "./ItemIcon";
 import { ItemCategory, matchesQuery, statusLabel } from "@/data/accepted-items";
 import type { MarketKey } from "@/data/markets";
 import { marketRoutes } from "@/data/markets";
+import { trackEvent } from "@/lib/analytics";
 import styles from "./AcceptanceFinder.module.css";
 
 export function AcceptanceFinder({
@@ -97,6 +98,10 @@ export function AcceptanceFinder({
                   aria-current={current ? "true" : undefined}
                   data-current={current ? "true" : "false"}
                   data-status={category.policy.value.status}
+                  // Records which items people ask about and what answer they
+                  // got. The mix of "not-accepted" answers is the useful
+                  // signal here: it shows what people expect us to take.
+                  onClick={() => trackEvent("item_checked", { market, item: category.slug, answer: category.policy.value.status })}
                 >
                   <span className={styles.categoryIconWrap}>
                     <ItemIcon icon={category.icon} className={styles.categoryIcon} size={34} />
@@ -159,7 +164,11 @@ export function AcceptanceFinder({
             </dl>
 
             <div className={styles.answerActions}>
-              <Link href={routes.business} className={styles.businessLink}>
+              <Link
+                href={routes.business}
+                className={styles.businessLink}
+                onClick={() => trackEvent("cta_click", { market, cta: "plan_a_pickup", location: "finder_answer" })}
+              >
                 Business quantity? Plan a pickup →
               </Link>
             </div>

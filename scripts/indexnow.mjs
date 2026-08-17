@@ -57,7 +57,26 @@ async function urlsFromSitemap() {
   const xml = await response.text();
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
   if (urls.length === 0) fail(`no <loc> entries found in ${sitemapUrl}`);
-  return urls;
+
+  // Rewrite each URL onto the host we are declaring.
+  //
+  // The sitemap hardcodes the apex, while the deployment serves from www and
+  // 308s the apex across. IndexNow validates the key by fetching keyLocation
+  // and does NOT follow that redirect, so submitting apex URLs fails with
+  // 403 even when the key file is reachable via the redirect. Normalising
+  // here keeps the host, the key location and every URL on the one origin
+  // that answers 200 directly, without touching the sitemap implementation.
+  const target = new URL(SITE);
+  return urls.map((u) => {
+    try {
+      const parsed = new URL(u);
+      parsed.protocol = target.protocol;
+      parsed.host = target.host;
+      return parsed.toString().replace(/\/$/, "") || parsed.toString();
+    } catch {
+      return u;
+    }
+  });
 }
 
 async function main() {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { MarketKey } from "@/data/markets";
 import { markets, marketRoutes } from "@/data/markets";
 import { RoutingJunction } from "./RoutingJunction";
+import { TrackedLink } from "./TrackedLink";
 import styles from "./Hero.module.css";
 
 function Arrow() {
@@ -26,12 +27,12 @@ export function Hero({ market }: { market: MarketKey }) {
           </h1>
           <p className={`ever-lede ${styles.support}`}>{cfg.support}</p>
           <div className={styles.choices} aria-label={`Choose how ${cfg.brandShort} can help`}>
-            <Link href={routes.residential} className={`${styles.choice} everChoiceResidential`}>
+            <TrackedLink href={routes.residential} event="path_selected" props={{ market, path: "residential" }} className={`${styles.choice} everChoiceResidential`}>
               <span className={styles.choiceTop}>Residential</span><span className={styles.choiceLabel}>I have a few items</span><span className={styles.choiceMeta}>Check an item and see the next step</span><span className={styles.choiceCue}><Arrow /></span>
-            </Link>
-            <Link href={routes.business} className={`${styles.choice} ${styles.choiceBusiness} everChoiceBusiness`}>
+            </TrackedLink>
+            <TrackedLink href={routes.business} event="path_selected" props={{ market, path: "business" }} className={`${styles.choice} ${styles.choiceBusiness} everChoiceBusiness`}>
               <span className={styles.choiceTop}>Business</span><span className={styles.choiceLabel}>I represent a business</span><span className={styles.choiceMeta}>Build a pickup brief and upload photos or an inventory list</span><span className={styles.choiceCue}><Arrow /></span>
-            </Link>
+            </TrackedLink>
           </div>
           <ul className={styles.trustLine} aria-label={`${cfg.brandShort} highlights`}>
             <li><span className={styles.trustDot} aria-hidden="true" />{cfg.regionShort}</li>

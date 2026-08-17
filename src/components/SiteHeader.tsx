@@ -1,4 +1,5 @@
 "use client";
+import { trackEvent } from "@/lib/analytics";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -65,8 +66,8 @@ export function SiteHeader({ market }: { market: MarketKey }) {
             })}
           </ul>
           <Link className={styles.locationSwitch} href="/" title="Change location">{cfg.stateAbbr} ▾</Link>
-          {cfg.phone ? <a className={styles.phone} href={`tel:${cfg.phone}`}>{cfg.phone}</a> : null}
-          {action.published ? <Link href={action.href} className={styles.action}>{action.label}</Link> : null}
+          {cfg.phone ? <a className={styles.phone} href={`tel:${cfg.phone}`} onClick={() => trackEvent("contact_click", { market, method: "phone", location: "header" })}>{cfg.phone}</a> : null}
+          {action.published ? <Link href={action.href} className={styles.action} onClick={() => trackEvent("cta_click", { market, cta: "plan_a_pickup", location: "header" })}>{action.label}</Link> : null}
         </nav>
       </div>
     </header>
