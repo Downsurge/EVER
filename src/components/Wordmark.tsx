@@ -27,7 +27,7 @@ export function Wordmark({
     <span className={`${styles.wordmark} ${compact ? styles.compact : ""}`}>
       <Image
         src={variant === "reversed" ? "/brand/ever-logo-reversed.png" : "/brand/ever-logo.png"}
-        alt="EVER — East Valley Electronic Recycle"
+        alt="EVER, East Valley Electronic Recycle"
         width={variant === "reversed" ? 1896 : 2172}
         height={variant === "reversed" ? 513 : 724}
         priority
