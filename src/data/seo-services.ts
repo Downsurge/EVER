@@ -1,3 +1,5 @@
+import type { MarketKey } from "./markets";
+import { markets } from "./markets";
 export type SeoService = {
   readonly slug: string;
   readonly title: string;
@@ -249,6 +251,60 @@ export const seoServices: readonly SeoService[] = [
   },
 ] as const;
 
-export function getSeoService(slug: string): SeoService | undefined {
-  return seoServices.find((service) => service.slug === slug);
+function localizeText(value: string, market: MarketKey): string {
+  if (market === "az") return value;
+  return value
+    .replaceAll("Free commercial pickup with 10 qualifying items", "Commercial pickup reviewed by load and location")
+    .replaceAll("Commercial pickup is free with at least 10 qualifying items.", "Commercial pickup availability and any fee are confirmed after EPER reviews the equipment, quantity, and location.")
+    .replaceAll("Businesses with at least 10 qualifying items receive free commercial pickup.", "EPER reviews business pickup requests by equipment mix, quantity, access, and location before scheduling.")
+    .replaceAll("Ten or more qualifying items may qualify for free commercial pickup.", "Commercial pickup availability is confirmed after EPER reviews the load.")
+    .replaceAll("Loads with at least 10 qualifying items may qualify for free pickup.", "Pickup availability is confirmed after EPER reviews the load.")
+    .replaceAll("loads with at least 10 qualifying items may qualify for free pickup", "pickup availability is confirmed after EPER reviews the load")
+    .replaceAll("free drop-off", "local drop-off")
+    .replaceAll("Free drop-off", "Local drop-off")
+    .replaceAll("EVER Arizona", "EPER El Paso")
+    .replaceAll("| EVER", "| EPER")
+    .replaceAll("EVER", "EPER")
+    .replaceAll("Arizona's East Valley, Phoenix and Florence", "El Paso, Texas")
+    .replaceAll("Arizona's East Valley, Phoenix, and Florence", "El Paso, Texas")
+    .replaceAll("the East Valley, Phoenix and Florence", "El Paso")
+    .replaceAll("the East Valley, Phoenix, and Florence", "El Paso")
+    .replaceAll("East Valley, Phoenix and Florence", "El Paso")
+    .replaceAll("East Valley, Phoenix, and Florence", "El Paso")
+    .replaceAll("Gilbert, Mesa, Chandler, Queen Creek, Tempe, Phoenix, San Tan Valley and Florence, Arizona", "El Paso, Texas")
+    .replaceAll("across Arizona", "across El Paso")
+    .replaceAll("for Arizona homes and businesses", "for El Paso homes and businesses")
+    .replaceAll("for Arizona businesses", "for El Paso businesses")
+    .replaceAll("in Arizona", "in El Paso TX")
+    .replaceAll("Arizona", "Texas");
+}
+
+export function getMarketSeoServices(market: MarketKey): readonly SeoService[] {
+  if (market === "az") return seoServices;
+  return seoServices.map((service) => ({
+    ...service,
+    title: (() => {
+      const localized = localizeText(service.title, market);
+      if (localized.toLowerCase().includes("el paso")) return localized;
+      const parts = localized.split("|");
+      return `${parts[0]?.trim()} in El Paso TX | EPER`;
+    })(),
+    h1: localizeText(service.h1, market),
+    description: localizeText(service.description, market),
+    image: service.image.replace("-arizona.svg", "-el-paso.svg"),
+    imageAlt: localizeText(service.imageAlt, market),
+    intro: localizeText(service.intro, market),
+    bullets: service.bullets.map((item) => localizeText(item, market)),
+    sections: service.sections.map((section) => ({ heading: localizeText(section.heading, market), body: localizeText(section.body, market) })),
+    faqs: service.faqs.map((item) => ({ question: localizeText(item.question, market), answer: localizeText(item.answer, market) })),
+  }));
+}
+
+export function getSeoService(market: MarketKey, slug: string): SeoService | undefined {
+  return getMarketSeoServices(market).find((service) => service.slug === slug);
+}
+
+export function marketServicesIntro(market: MarketKey): string {
+  const cfg = markets[market];
+  return `${cfg.brandShort} provides electronics recycling, e-waste recycling, computer and IT equipment recycling, and pickup options for ${cfg.region}.`;
 }

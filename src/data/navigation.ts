@@ -1,4 +1,5 @@
-import { routes } from "./site";
+import type { MarketKey } from "./markets";
+import { marketRoutes } from "./markets";
 
 export type NavItem = {
   readonly label: string;
@@ -6,20 +7,22 @@ export type NavItem = {
   readonly published: boolean;
 };
 
-export const primaryNav: readonly NavItem[] = [
-  { label: "Recycle", href: routes.residential, published: true },
-  { label: "Services", href: "/services", published: true },
-  { label: "Business", href: routes.business, published: true },
-  { label: "What We Accept", href: routes.whatWeAccept, published: true },
-] as const;
-
-export function publishedNav(): readonly NavItem[] {
-  return primaryNav.filter((item) => item.published);
+export function publishedNav(market: MarketKey): readonly NavItem[] {
+  const routes = marketRoutes(market);
+  return [
+    { label: "Recycle", href: routes.residential, published: true },
+    { label: "Services", href: routes.services, published: true },
+    { label: "Pricing", href: routes.pricing, published: true },
+    { label: "Business", href: routes.business, published: true },
+    { label: "Resources", href: routes.resources, published: true },
+  ].filter((item) => item.published);
 }
 
-export const persistentBusinessAction = {
-  label: "Plan a Pickup",
-  href: routes.business,
-  published: true,
-  blockedReason: "",
-} as const;
+export function persistentBusinessAction(market: MarketKey) {
+  return {
+    label: "Plan a Pickup",
+    href: marketRoutes(market).business,
+    published: true,
+    blockedReason: "",
+  } as const;
+}

@@ -124,3 +124,19 @@
     align-items: start;
   }
 }
+
+.secondaryHeading { margin-top: 1.4rem !important; }
+.changeMarket {
+  display: block !important;
+  margin-top: .65rem !important;
+  background: transparent !important;
+  color: rgba(255,255,255,.7) !important;
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+/* Physical address, shown only for a market that has one. */
+.address {
+  font-style: normal;
+  margin-top: .55rem;
+  line-height: 1.5;
+}

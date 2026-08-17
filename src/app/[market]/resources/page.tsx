@@ -1,0 +1,8 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getMarket,isMarketKey } from "@/data/markets";
+import { resourcesForMarket } from "@/data/resources";
+import styles from "../../service.module.css";
+export async function generateMetadata({params}:{params:Promise<{market:string}>}):Promise<Metadata>{const{market}=await params;const cfg=getMarket(market);if(!cfg)return{};return{title:`Electronics Recycling Resources | ${cfg.marketLabel} | ${cfg.brandShort}`,description:`Local electronics recycling guides, e-waste answers, pricing topics, and business recycling resources from ${cfg.brandShort}.`,alternates:{canonical:`/${market}/resources`}}}
+export default async function Page({params}:{params:Promise<{market:string}>}){const{market}=await params;if(!isMarketKey(market))notFound();const cfg=getMarket(market)!;const articles=resourcesForMarket(market);return <div className={styles.page}><section className={styles.hero}><div className="ever-shell"><p className="ever-eyebrow">RESOURCES</p><h1>Useful answers people actually search for.</h1><p>{cfg.brandShort} resources are organized around local recycling questions, device types, pickup, pricing, and commercial technology loads.</p></div></section><section className={styles.body}><div className="ever-shell"><div className={styles.mainContent}>{articles.map(a=><article key={a.slug}><p className="ever-eyebrow">{a.primaryKeyword}</p><h2><Link href={`/${market}/resources/${a.slug}`}>{a.title}</Link></h2><p>{a.description}</p></article>)}</div></div></section></div>}

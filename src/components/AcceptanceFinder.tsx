@@ -4,19 +4,22 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ItemIcon } from "./ItemIcon";
 import { ItemCategory, matchesQuery, statusLabel } from "@/data/accepted-items";
-import { dropOffLocation, openingDays, openingHours, routes } from "@/data/site";
-import { isPublishable } from "@/data/verification";
+import type { MarketKey } from "@/data/markets";
+import { marketRoutes } from "@/data/markets";
 import styles from "./AcceptanceFinder.module.css";
 
 export function AcceptanceFinder({
   categories,
   initialQuery,
   selectedSlug,
+  market,
 }: {
   categories: readonly ItemCategory[];
   initialQuery: string;
   selectedSlug: string | null;
+  market: MarketKey;
 }) {
+  const routes = marketRoutes(market);
   const [query, setQuery] = useState(initialQuery);
   const [lastQueryFromUrl, setLastQueryFromUrl] = useState(initialQuery);
 
@@ -151,26 +154,6 @@ export function AcceptanceFinder({
                 <div>
                   <dt>{policy.status === "not-accepted" ? "Next route" : "Before handoff"}</dt>
                   <dd>{policy.preparation}</dd>
-                </div>
-              ) : null}
-
-              {policy.status !== "not-accepted" && isPublishable(dropOffLocation.streetAddress) ? (
-                <div>
-                  <dt>Drop-off</dt>
-                  <dd>
-                    {dropOffLocation.streetAddress.value}
-                    {isPublishable(dropOffLocation.city) ? `, ${dropOffLocation.city.value}` : ""}
-                  </dd>
-                </div>
-              ) : null}
-
-              {policy.status !== "not-accepted" && isPublishable(openingHours) ? (
-                <div>
-                  <dt>Hours</dt>
-                  <dd>
-                    {openingHours.value.opens} to {openingHours.value.closes}
-                    {isPublishable(openingDays) ? `, ${openingDays.value}` : ""}
-                  </dd>
                 </div>
               ) : null}
             </dl>

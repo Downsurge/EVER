@@ -105,6 +105,18 @@
   font-weight: 800;
 }
 
+.form label > small {
+  color: var(--ever-navy-muted);
+  font-size: .68rem;
+  line-height: 1.45;
+}
+
+.form input[type="file"] {
+  min-height: auto;
+  padding: .65rem;
+  background: var(--ever-surface-sunken);
+}
+
 .form input,
 .form textarea {
   width: 100%;

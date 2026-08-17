@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
 
   if (clean(body.website, 200)) return Response.json({ ok: true });
 
+  const market = clean(body.market, 5) === "tx" ? "tx" : "az";
+  const brand = market === "tx" ? "EPER" : "EVER";
   const name = clean(body.name, 120);
   const email = clean(body.email, 240);
   const phone = clean(body.phone, 80);
@@ -40,8 +42,12 @@ export async function POST(request: NextRequest) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.EVER_LEADS_TO_EMAIL || "ever@electronicrecycle.net";
-  const from = process.env.EVER_LEADS_FROM_EMAIL;
+  const to = market === "tx"
+    ? (process.env.EPER_LEADS_TO_EMAIL || process.env.EVER_LEADS_TO_EMAIL || "ever@electronicrecycle.net")
+    : (process.env.EVER_LEADS_TO_EMAIL || "ever@electronicrecycle.net");
+  const from = market === "tx"
+    ? (process.env.EPER_LEADS_FROM_EMAIL || process.env.EVER_LEADS_FROM_EMAIL)
+    : process.env.EVER_LEADS_FROM_EMAIL;
 
   if (!apiKey || !from) {
     return Response.json(
@@ -55,16 +61,16 @@ export async function POST(request: NextRequest) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "User-Agent": "EVER-Website/1.0",
+      "User-Agent": "ElectronicRecycle-Website/2.0",
     },
     body: JSON.stringify({
       from,
       to: [to],
       reply_to: email,
-      subject: `EVER website — ${subject.replace(/[\r\n]+/g, " ")}`,
+      subject: `${brand} website — ${subject.replace(/[\r\n]+/g, " ")}`,
       text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || "Not provided"}\nSubject: ${subject}\n\n${message}`,
       html: `<div style="font-family:Arial,sans-serif;color:#0b1b34;line-height:1.5">
-        <h1 style="font-size:22px">EVER website message</h1>
+        <h1 style="font-size:22px">${brand} website message</h1>
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
         <p><strong>Email:</strong> ${escapeHtml(email)}</p>
         <p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p>

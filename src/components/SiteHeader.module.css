@@ -152,3 +152,18 @@
 .phone { display:inline-flex; align-items:center; min-height:var(--ever-target-min); color:var(--ever-navy-muted); text-decoration:none; font-size:.75rem; font-weight:800; white-space:nowrap; }
 .phone:hover { color:var(--ever-blue); }
 @media (max-width:63.99em){ .phone { width:100%; justify-content:center; min-height:46px; margin-top:.35rem; border-radius:999px; background:var(--ever-surface-sunken); color:var(--ever-navy); } }
+
+.locationSwitch {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding-inline: .75rem;
+  border-radius: 999px;
+  background: #f3f7fb;
+  color: var(--ever-navy);
+  text-decoration: none;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.locationSwitch:hover { background: #eaf1f7; }

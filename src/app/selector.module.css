@@ -1,0 +1,81 @@
+.page{min-height:100vh;display:grid;place-items:center;position:relative;overflow:hidden;background:linear-gradient(180deg,#fff,#f5f9fc);color:var(--ever-navy);padding:3rem 1.25rem}.glow{position:absolute;width:42rem;height:42rem;border-radius:50%;right:-15rem;top:-20rem;background:radial-gradient(circle,rgba(24,178,196,.17),rgba(11,123,232,.06) 45%,transparent 70%)}.shell{position:relative;width:min(1100px,100%)}.brand{font-size:1.05rem;font-weight:950;letter-spacing:-.03em}.brand span{color:var(--ever-brand-cyan)}.intro{margin-top:clamp(3rem,8vw,7rem);max-width:780px}.kicker{font-size:.72rem;font-weight:900;letter-spacing:.14em;color:var(--ever-cyan-ink)}.intro h1{margin-top:.7rem;font-size:clamp(3.1rem,7vw,6.5rem);line-height:.9;letter-spacing:-.06em;font-weight:950}.intro>p:last-child{margin-top:1.3rem;max-width:62ch;color:var(--ever-navy-muted);font-size:1.05rem;line-height:1.65}.choices{display:grid;gap:1rem;margin-top:3rem}.card{position:relative;display:grid;gap:.55rem;padding:1.55rem;border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 18px 45px rgba(11,27,52,.07);transition:transform .2s ease,box-shadow .2s ease}.card:hover{transform:translateY(-5px);box-shadow:0 24px 55px rgba(11,27,52,.12)}.card[data-last=true]{box-shadow:inset 0 0 0 2px rgba(24,178,196,.28),0 18px 45px rgba(11,27,52,.08)}.last{position:absolute;right:1rem;top:1rem;font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--ever-lime-ink);background:rgba(126,198,30,.11);padding:.45rem .65rem;border-radius:999px}.state{font-size:.7rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--ever-cyan-ink)}.market{font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-.035em}.localBrand{display:flex;align-items:baseline;gap:.65rem;margin-top:.4rem}.localBrand b{font-size:1.2rem}.localBrand span{font-size:.78rem;color:var(--ever-navy-muted)}.card p{margin-top:.6rem;color:var(--ever-navy-muted);font-size:.82rem;line-height:1.55}.enter{margin-top:1rem;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.enter b{color:var(--ever-brand-cyan);font-size:1.1rem}.note{text-align:center;margin-top:1.5rem;color:var(--ever-navy-muted);font-size:.75rem}@media(min-width:760px){.choices{grid-template-columns:1fr 1fr}.card{min-height:285px;padding:1.9rem}}
+
+/* Keep the page grid from being widened by its own contents.
+
+   `.page` is a grid whose column was implicit, so the column sized itself to
+   the max-content of its item. The photo strip scrolls internally, but its
+   max-content is the full width of every image laid end to end, and that
+   still counts toward the column. The column grew to ~2900px, `.shell` was
+   centred inside THAT, and the whole page appeared shoved to the right.
+
+   `minmax(0, 1fr)` caps the column at the container, and `min-width: 0` stops
+   the item forcing its own minimum. This is why the layout only broke once
+   the slideshow had images in it. */
+.page {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.shell {
+  min-width: 0;
+}
+
+/* Parent ElectronicRecycle.net lockup, shown once the artwork is present.
+   The box is sized by aspect ratio so the image needs no hardcoded pixel
+   dimensions and can be re-exported without touching code. */
+.logo {
+  position: relative;
+  width: min(30rem, 80vw);
+  aspect-ratio: 1316 / 322;
+  margin-inline: auto;
+}
+
+.logoImage {
+  object-fit: contain;
+}
+
+/* The card is a container; this link is the primary target and stretches to
+   cover it, so the whole card stays clickable while the contact details
+   below remain their own real links. */
+.cardLink {
+  display: grid;
+  gap: .55rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+}
+
+/* Phone and email. Bold, and lifted above the stretched link so they are
+   tappable rather than swallowed by it. */
+.cardContact {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.1rem;
+  margin-top: .9rem;
+  padding-top: .9rem;
+  border-top: 1px solid rgba(11, 27, 52, .1);
+}
+
+.cardContact a {
+  font-weight: 800;
+  font-size: .92rem;
+  color: var(--ever-navy);
+  text-decoration: none;
+  /* Comfortable tap target without disturbing the card rhythm. */
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cardContact a:hover {
+  color: var(--ever-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
