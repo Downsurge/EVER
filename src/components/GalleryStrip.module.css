@@ -3,6 +3,10 @@
 .strip {
   margin-top: 3rem;
   width: 100%;
+  /* The track scrolls internally, but without this its max-content still
+     propagates up and widens whatever grid or flex container holds the
+     strip. Every ancestor between the track and the layout needs it. */
+  min-width: 0;
 }
 
 .head {
@@ -55,6 +59,8 @@
   grid-auto-flow: column;
   grid-auto-columns: min(22rem, 70vw);
   gap: 0.85rem;
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
