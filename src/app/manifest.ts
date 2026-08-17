@@ -1,0 +1,2 @@
+import type { MetadataRoute } from "next";
+export default function manifest(): MetadataRoute.Manifest { return { name:"EVER — East Valley Electronic Recycle", short_name:"EVER", description:"Electronic recycling and pickup across Arizona's East Valley.", start_url:"/", display:"standalone", background_color:"#ffffff", theme_color:"#0b1b34", icons:[{src:"/icon.png",sizes:"1254x1254",type:"image/png"}] }; }

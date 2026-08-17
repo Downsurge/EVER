@@ -1,18 +1,25 @@
 # Agent run logs (local telemetry, never shared)
 .workcenter/
 
-# Node / build output (the web stack is not chosen yet; these are harmless now)
+# Node / build output. Anchored to the repo root on purpose: unanchored rules
+# match at any depth, so a real source directory named out/ or build/ would be
+# invisible to git, and therefore invisible to the codex-review gate, which
+# could then return SHIP without ever seeing it.
 node_modules/
-.next/
-out/
-dist/
-build/
-coverage/
+/.next/
+/out/
+/dist/
+/build/
+/coverage/
 
 # Env and secrets
 .env
 .env.*
 !.env.example
+
+# Generated TypeScript incremental cache. Machine-specific, never committed.
+*.tsbuildinfo
+next-env.d.ts
 
 # OS / editor noise
 .DS_Store

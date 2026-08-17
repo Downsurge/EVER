@@ -1,0 +1,154 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: rgba(255, 255, 255, .9);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(18px) saturate(150%);
+  transition:
+    border-color var(--ever-motion-hover) var(--ever-ease-out),
+    box-shadow var(--ever-motion-hover) var(--ever-ease-out),
+    background-color var(--ever-motion-hover) var(--ever-ease-out);
+}
+
+.scrolled {
+  border-bottom-color: rgba(11, 27, 52, .09);
+  box-shadow: 0 8px 28px rgba(11, 27, 52, .05);
+  background: rgba(255, 255, 255, .96);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ever-space-lg);
+  min-height: 86px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ever-target-min);
+  text-decoration: none;
+  margin-inline-end: auto;
+  transition: transform var(--ever-motion-hover) var(--ever-ease-out);
+}
+
+.brand:hover { transform: translateY(-1px); }
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ever-space-xs);
+  min-height: 48px;
+  padding-inline: var(--ever-space-md);
+  color: var(--ever-navy);
+  background: var(--ever-white);
+  border: 1px solid var(--ever-border);
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.toggle:hover { border-color: var(--ever-navy); }
+.toggleIcon { display: inline-flex; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--ever-space-lg);
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 1.85rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ever-target-min);
+  color: var(--ever-navy);
+  text-decoration: none;
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .105em;
+  text-transform: uppercase;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 2px;
+  background: var(--ever-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--ever-motion-hover) var(--ever-ease-out);
+}
+
+.navLink:hover::after,
+.navLink:focus-visible::after,
+.navLink[aria-current="page"]::after { transform: scaleX(1); }
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: 1.15rem;
+  background: var(--ever-navy);
+  color: var(--ever-white);
+  border: 1px solid var(--ever-navy);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition:
+    transform var(--ever-motion-hover) var(--ever-ease-out),
+    box-shadow var(--ever-motion-hover) var(--ever-ease-out);
+}
+
+.action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(11, 27, 52, .17);
+}
+
+@media (max-width: 63.99em) {
+  .bar { min-height: 74px; flex-wrap: wrap; }
+  .nav {
+    width: calc(100% + (var(--ever-gutter) * 2));
+    margin-inline: calc(var(--ever-gutter) * -1);
+    padding: var(--ever-space-md) var(--ever-gutter) var(--ever-space-lg);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ever-space-md);
+    background: rgba(255, 255, 255, .98);
+    border-top: 1px solid var(--ever-border-soft);
+  }
+  .nav[data-enhanced="true"][data-open="false"] { display: none; }
+  .navList { display: grid; gap: .2rem; }
+  .navLink { min-height: 50px; font-size: .85rem; }
+  .action { min-height: 54px; }
+}
+
+@media (min-width: 64em) {
+  .toggle { display: none; }
+  .nav { display: flex; }
+}
+
+
+.phone { display:inline-flex; align-items:center; min-height:var(--ever-target-min); color:var(--ever-navy-muted); text-decoration:none; font-size:.75rem; font-weight:800; white-space:nowrap; }
+.phone:hover { color:var(--ever-blue); }
+@media (max-width:63.99em){ .phone { width:100%; justify-content:center; min-height:46px; margin-top:.35rem; border-radius:999px; background:var(--ever-surface-sunken); color:var(--ever-navy); } }

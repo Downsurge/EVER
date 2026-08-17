@@ -1,0 +1,251 @@
+.junction {
+  position: relative;
+  min-height: 470px;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(126, 198, 30, .13), transparent 24%),
+    radial-gradient(circle at 16% 76%, rgba(11, 123, 232, .11), transparent 28%),
+    linear-gradient(145deg, #fbfdff, #f4f8fc 62%, #fbfffa);
+  box-shadow: none;
+}
+
+.gridGlow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .38;
+  background-image:
+    linear-gradient(rgba(11,27,52,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11,27,52,.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom right, transparent 4%, #000 45%, transparent 100%);
+}
+
+.route {
+  position: absolute;
+  inset: 24px 14px 10px 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 34px);
+  overflow: visible;
+}
+
+.ghostRoute {
+  fill: none;
+  stroke: rgba(11, 27, 52, .09);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.drawRoute {
+  fill: none;
+  stroke: url(#ever-route-gradient);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    stroke-width var(--ever-motion-hover) var(--ever-ease-out),
+    opacity var(--ever-motion-hover) var(--ever-ease-out),
+    filter var(--ever-motion-hover) var(--ever-ease-out);
+}
+
+.junctionMark { transform-origin: 312px 180px; }
+
+.sourceTray {
+  position: absolute;
+  left: 7%;
+  top: 42%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: min(36%, 220px);
+  padding: .9rem;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 14px 32px rgba(11,27,52,.08);
+  backdrop-filter: blur(10px);
+}
+
+.trayLabel {
+  display: block;
+  margin-bottom: .65rem;
+  color: var(--ever-navy-muted);
+  font-size: .68rem;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+
+.deviceRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .45rem;
+}
+
+.device {
+  display: grid;
+  place-items: center;
+  min-height: 54px;
+  color: var(--ever-cyan-ink);
+  background: var(--ever-white);
+  border: 0;
+  border-radius: 9px;
+}
+
+.endpoint {
+  position: absolute;
+  right: 4.5%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  width: min(34%, 215px);
+  padding: .72rem .82rem;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 12px 28px rgba(11,27,52,.08);
+  transition:
+    transform var(--ever-motion-hover) var(--ever-ease-out),
+    border-color var(--ever-motion-hover) var(--ever-ease-out),
+    box-shadow var(--ever-motion-hover) var(--ever-ease-out);
+}
+
+.endpointResidential { top: 18%; }
+.endpointBusiness { bottom: 17%; }
+
+.endpointIcon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 8px;
+  color: var(--ever-blue);
+  background: var(--ever-surface-blue);
+}
+
+.endpoint strong,
+.endpoint small { display: block; }
+
+.endpoint strong {
+  color: var(--ever-navy);
+  font-size: .72rem;
+  letter-spacing: .08em;
+}
+
+.endpoint small {
+  margin-top: .12rem;
+  color: var(--ever-navy-muted);
+  font-size: .71rem;
+}
+
+.statusPill {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .45rem .7rem;
+  border: 1px solid rgba(11,27,52,.1);
+  border-radius: 999px;
+  background: rgba(255,255,255,.8);
+  color: var(--ever-navy-muted);
+  font-size: .65rem;
+  font-weight: 850;
+  letter-spacing: .13em;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ever-brand-lime);
+  box-shadow: 0 0 0 4px rgba(126,198,30,.14);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawRoute {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: routeDraw var(--ever-motion-route) var(--ever-ease-out) .15s forwards;
+  }
+
+  .routeBusiness { animation-delay: .35s; }
+  .sourceTray { animation: trayIn 650ms var(--ever-ease-out) .05s both; }
+  .endpointResidential { animation: endpointIn 520ms var(--ever-ease-out) .76s both; }
+  .endpointBusiness { animation: endpointIn 520ms var(--ever-ease-out) .9s both; }
+}
+
+@keyframes routeDraw { to { stroke-dashoffset: 0; } }
+
+@keyframes trayIn {
+  from { opacity: 0; transform: translate(-18px,-50%); }
+  to { opacity: 1; transform: translate(0,-50%); }
+}
+
+@keyframes endpointIn {
+  from { opacity:0; transform: translateX(16px); }
+  to { opacity:1; transform:none; }
+}
+
+:global(.everHero:has(.everChoiceResidential:hover)) .routeResidential,
+:global(.everHero:has(.everChoiceResidential:focus-visible)) .routeResidential {
+  stroke-width: 10;
+  filter: drop-shadow(0 0 7px rgba(24,178,196,.28));
+}
+
+:global(.everHero:has(.everChoiceResidential:hover)) .routeBusiness,
+:global(.everHero:has(.everChoiceResidential:focus-visible)) .routeBusiness { opacity: .24; }
+
+:global(.everHero:has(.everChoiceResidential:hover)) .endpointResidential,
+:global(.everHero:has(.everChoiceResidential:focus-visible)) .endpointResidential {
+  transform: translateX(-6px);
+  border-color: rgba(14,142,158,.52);
+  box-shadow: 0 16px 34px rgba(14,142,158,.14);
+}
+
+:global(.everHero:has(.everChoiceBusiness:hover)) .routeBusiness,
+:global(.everHero:has(.everChoiceBusiness:focus-visible)) .routeBusiness {
+  stroke-width: 10;
+  filter: drop-shadow(0 0 7px rgba(126,198,30,.24));
+}
+
+:global(.everHero:has(.everChoiceBusiness:hover)) .routeResidential,
+:global(.everHero:has(.everChoiceBusiness:focus-visible)) .routeResidential { opacity: .24; }
+
+:global(.everHero:has(.everChoiceBusiness:hover)) .endpointBusiness,
+:global(.everHero:has(.everChoiceBusiness:focus-visible)) .endpointBusiness {
+  transform: translateX(-6px);
+  border-color: rgba(126,198,30,.55);
+  box-shadow: 0 16px 34px rgba(126,198,30,.13);
+}
+
+@media (max-width: 63.99em) {
+  .junction { min-height: 350px; }
+  .sourceTray { left: 4%; width: 30%; }
+  .endpoint { right: 3%; width: 34%; padding: .55rem; }
+  .endpointIcon { width: 36px; height: 36px; }
+  .endpoint small { display: none; }
+}
+
+@media (max-width: 38em) {
+  .junction { min-height: 300px; }
+  .sourceTray { width: 32%; padding: .55rem; }
+  .trayLabel { font-size: .56rem; }
+  .deviceRow { grid-template-columns: 1fr 1fr; }
+  .device { min-height: 40px; }
+  .device svg { width: 22px; }
+  .endpoint { width: 38%; }
+  .endpoint strong { font-size: .62rem; }
+  .statusPill { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawRoute { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+  .sourceTray, .endpoint { animation: none; }
+}

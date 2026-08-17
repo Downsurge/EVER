@@ -1,0 +1,86 @@
+:root {
+  --ever-white: #ffffff;
+  --ever-surface: #ffffff;
+  --ever-surface-sunken: #f4f7fb;
+  --ever-surface-blue: #eef6ff;
+  --ever-surface-cyan: #eefbfc;
+  --ever-navy: #0b1b34;
+  --ever-navy-2: #102746;
+  --ever-navy-body: #20344f;
+  --ever-navy-muted: #66758a;
+
+  --ever-brand-blue: #0b7be8;
+  --ever-brand-cyan: #18b2c4;
+  --ever-brand-lime: #7ec61e;
+  --ever-blue: #0968c6;
+  --ever-blue-dark: #064f99;
+  --ever-cyan-route: #0e8e9e;
+  --ever-cyan-ink: #0a6875;
+  --ever-lime: #7ec61e;
+  --ever-lime-ink: #4e7d0f;
+  --ever-lime-deep: #3e640c;
+
+  --ever-gradient: linear-gradient(135deg, #0879e8 0%, #13b9c1 51%, #7dce19 100%);
+  --ever-gradient-soft: linear-gradient(135deg, rgba(11,123,232,.1), rgba(24,178,196,.09) 52%, rgba(126,198,30,.1));
+
+  --ever-border: #cbd6e3;
+  --ever-border-soft: #e4ebf2;
+  --ever-border-strong: #0b1b34;
+
+  --ever-font-sans: "Aptos", "Inter", "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --ever-step-display: clamp(3.35rem, 2rem + 5.6vw, 7.2rem);
+  --ever-step-section: clamp(2.35rem, 1.5rem + 3.6vw, 5rem);
+  --ever-step-title: clamp(1.55rem, 1.18rem + 1.4vw, 2.4rem);
+  --ever-step-body-lg: clamp(1.08rem, 1rem + .35vw, 1.28rem);
+  --ever-step-body: 1rem;
+  --ever-step-control: clamp(1rem, .96rem + .2vw, 1.12rem);
+  --ever-step-small: .875rem;
+
+  --ever-leading-display: .88;
+  --ever-leading-tight: 1.03;
+  --ever-leading-body: 1.62;
+
+  --ever-space-2xs: .25rem;
+  --ever-space-xs: .5rem;
+  --ever-space-sm: .75rem;
+  --ever-space-md: 1rem;
+  --ever-space-lg: 1.5rem;
+  --ever-space-xl: 2.5rem;
+  --ever-space-2xl: 4rem;
+  --ever-space-3xl: 6.5rem;
+  --ever-space-4xl: 9rem;
+
+  --ever-grid-columns: 12;
+  --ever-gutter: clamp(1rem, .5rem + 2vw, 2rem);
+  --ever-measure-max: 88rem;
+
+  --ever-target-min: 44px;
+  --ever-target-primary: 56px;
+
+  --ever-motion-fast: 140ms;
+  --ever-motion-hover: 190ms;
+  --ever-motion-exit: 140ms;
+  --ever-motion-result: 340ms;
+  --ever-motion-route: 1150ms;
+  --ever-motion-scene: 650ms;
+  --ever-ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ever-ease-in: cubic-bezier(.4, 0, 1, 1);
+
+  --ever-focus-width: 3px;
+  --ever-focus-offset: 3px;
+  --ever-radius: 8px;
+  --ever-radius-lg: 16px;
+  --ever-shadow-sm: 0 12px 28px rgba(11, 27, 52, .08);
+  --ever-shadow-md: 0 24px 60px rgba(11, 27, 52, .13);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ever-motion-fast: 0ms;
+    --ever-motion-hover: 0ms;
+    --ever-motion-exit: 0ms;
+    --ever-motion-result: 0ms;
+    --ever-motion-route: 0ms;
+    --ever-motion-scene: 0ms;
+  }
+}

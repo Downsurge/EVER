@@ -1,0 +1,17 @@
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  width: clamp(10.5rem, 14vw, 14rem);
+  line-height: 0;
+}
+
+.compact {
+  width: clamp(8.5rem, 11vw, 11rem);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}

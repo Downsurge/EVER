@@ -1,0 +1,126 @@
+.footer {
+  background: var(--ever-navy);
+  color: #fff;
+  padding-block: 4.5rem 1.4rem;
+}
+
+.top {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.brandBlock {
+  max-width: 32rem;
+}
+
+.brandBlock > p {
+  margin-top: 1rem;
+  color: rgba(255,255,255,.58);
+  font-size: .82rem;
+  max-width: 40ch;
+}
+
+.veteranBadge {
+  display: block;
+  width: min(7rem, 34vw);
+  height: auto;
+  margin-top: 1rem;
+}
+
+.linkGroup h2,
+.contactBlock h2 {
+  margin: 0 0 .9rem;
+  color: rgba(255,255,255,.48);
+  font-size: .67rem;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.linkGroup ul {
+  display: grid;
+  gap: .2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkGroup a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  color: rgba(255,255,255,.83);
+  font-size: .8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.linkGroup a:hover {
+  color: var(--ever-brand-cyan);
+}
+
+.areaList {
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+
+.contactBlock p {
+  color: rgba(255,255,255,.58);
+  font-size: .8rem;
+  line-height: 1.55;
+  max-width: 28ch;
+}
+
+.contactList {
+  display: grid;
+  gap: .35rem;
+  margin-top: 1rem;
+}
+
+.contactList a {
+  color: rgba(255,255,255,.86);
+  font-size: .8rem;
+  text-decoration: none;
+}
+
+.contactList a:hover {
+  color: var(--ever-brand-cyan);
+}
+
+.contactBlock > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin-top: 1rem;
+  padding-inline: 1rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ever-navy);
+  text-decoration: none;
+  font-size: .76rem;
+  font-weight: 850;
+}
+
+.contactBlock > a:hover {
+  background: var(--ever-brand-lime);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-top: 3.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255,255,255,.1);
+  color: rgba(255,255,255,.38);
+  font-size: .66rem;
+}
+
+@media (min-width: 64em) {
+  .top {
+    grid-template-columns: 4.2fr 1.6fr 2.2fr 1.8fr 2.2fr;
+    gap: 2.8rem;
+    align-items: start;
+  }
+}
