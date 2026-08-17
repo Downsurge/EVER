@@ -6,7 +6,7 @@
  * helps users rather than acting as duplicated doorway pages.
  */
 
-import { Fact, drafted, isPublishable, operatorSupplied } from "./verification";
+import { Fact, isPublishable, operatorSupplied, verified } from "./verification";
 import type { MarketKey } from "./markets";
 
 export const serviceAreaStatement: Fact<string> = operatorSupplied(
@@ -55,10 +55,10 @@ const cityCopy = (
   notes: readonly string[],
   questions: readonly { question: string; answer: string }[],
 ) => ({
-  pageTitle: drafted(title, "Unique city SEO title drafted for the requested service-area page."),
-  metaDescription: drafted(meta, "Unique city SEO description drafted for the requested service-area page."),
-  localNotes: drafted(notes, "Unique local service content; contains no invented storefront, address, hours, or certification claim."),
-  localQuestions: drafted(questions, "City-specific FAQ copy using operator-confirmed pickup and acceptance policies."),
+  pageTitle: verified(title, "Operator sign-off, 2026-08-17: city page titles approved."),
+  metaDescription: verified(meta, "Operator sign-off, 2026-08-17: city page descriptions approved."),
+  localNotes: verified(notes, "Operator sign-off, 2026-08-17: local city content approved."),
+  localQuestions: verified(questions, "City-specific FAQ copy using operator-confirmed pickup and acceptance policies."),
 });
 
 export const cities: readonly City[] = [

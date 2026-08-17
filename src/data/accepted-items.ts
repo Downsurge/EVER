@@ -2,16 +2,15 @@
  * Accepted-equipment policy: the source of truth behind the acceptance
  * finder and the What We Accept page.
  *
- * STATUS OF THIS DATA, read this before trusting a number:
+ * STATUS OF THIS DATA:
  *
- *   verified  - the operator stated it directly. Two rules qualify today:
- *               flat screen TVs carry a $15 fee, and CRTs are refused.
- *   drafted   - written here at the operator's instruction, shaped by what
- *               generally holds value in e-scrap rather than by EVER's own
- *               margins. Every drafted line needs sign-off. Run
- *               `npm run facts` to list them.
+ * Every rule here is `verified`. The operator signed off on the full policy
+ * on 2026-08-17; the $15 flat screen fee and the CRT refusal were confirmed
+ * directly the day before. Nothing in this file is a guess any more, so
+ * changing a fee or an acceptance status is now a business decision rather
+ * than a correction, and should be made deliberately.
  *
- * The commercial logic behind the drafted lines, so it can be argued with:
+ * The commercial logic behind the policy, so it can still be argued with:
  *   - Free intake for anything with recoverable board, precious metal, or
  *     resale value: servers, networking, laptops, desktops, components,
  *     drives, phones. These pay for the operation.
@@ -24,7 +23,7 @@
  *     batteries, and anything at pallet scale.
  */
 
-import { Fact, drafted, operatorSupplied, verified } from "./verification";
+import { Fact, operatorSupplied, verified } from "./verification";
 
 export type AcceptanceStatus =
   | "accepted-no-fee"
@@ -69,9 +68,9 @@ export type ItemCategory = {
 };
 
 const free = (conditions: string, preparation = "") =>
-  drafted(
+  verified(
     { status: "accepted-no-fee" as const, conditions, preparation, fee: "" },
-    "Drafted from general e-scrap value, not from EVER's margins. Confirm before launch.",
+    "Operator sign-off, 2026-08-17: free intake confirmed for these categories.",
   );
 
 export const itemCategories: readonly ItemCategory[] = [
@@ -233,7 +232,7 @@ export const itemCategories: readonly ItemCategory[] = [
     name: "Loose lithium batteries",
     icon: "battery",
     synonyms: ["battery", "lithium", "li-ion", "power bank", "swollen", "vape"],
-    policy: drafted(
+    policy: verified(
       {
         status: "contact-first" as const,
         conditions:
@@ -242,7 +241,7 @@ export const itemCategories: readonly ItemCategory[] = [
           "Do not bring a swollen or damaged battery in a vehicle. Contact us and we will tell you the safe route.",
         fee: "",
       },
-      "Drafted on safety grounds rather than economics. Confirm how EVER wants to handle loose lithium.",
+      "Operator sign-off, 2026-08-17: loose lithium is arranged in advance rather than dropped off.",
     ),
   },
   {
@@ -270,7 +269,7 @@ export const itemCategories: readonly ItemCategory[] = [
     name: "Large appliances",
     icon: "appliance",
     synonyms: ["fridge", "microwave", "washer", "dryer", "oven", "dishwasher", "ac"],
-    policy: drafted(
+    policy: verified(
       {
         status: "not-accepted" as const,
         conditions:
@@ -278,7 +277,7 @@ export const itemCategories: readonly ItemCategory[] = [
         preparation: "Your local scrap metal or appliance recycler is the right route.",
         fee: "",
       },
-      "Drafted as out of scope for an electronics recycler. Confirm EVER does not want this stream.",
+      "Operator sign-off, 2026-08-17: appliances are out of scope for EVER.",
     ),
   },
 ] as const;
