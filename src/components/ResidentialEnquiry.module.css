@@ -1,0 +1,103 @@
+/* Residential enquiry. Lighter than the business brief on purpose. */
+
+.enquiry {
+  margin-top: 3.5rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  border-radius: 20px;
+  background: var(--ever-surface-sunken, #f4f7fb);
+}
+
+.head h2 {
+  font-size: var(--ever-step-title);
+  font-weight: 900;
+  letter-spacing: -.02em;
+}
+
+.head p {
+  margin-top: .6rem;
+  max-width: 52ch;
+  color: var(--ever-navy-muted);
+}
+
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 44px;
+  padding: .5rem .85rem;
+  border: 2px solid var(--ever-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ever-navy);
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Selection is carried by border weight and a filled mark, not colour alone. */
+.chip[data-checked="true"] {
+  border-color: var(--ever-navy);
+  border-width: 3px;
+  padding: calc(.5rem - 1px) calc(.85rem - 1px);
+}
+
+.chip input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--ever-blue);
+}
+
+.chip:focus-within {
+  outline: var(--ever-focus-width, 3px) solid var(--ever-blue);
+  outline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.send {
+  min-height: 52px;
+  padding-inline: 1.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ever-navy);
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.send:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.send:not(:disabled):hover {
+  background: var(--ever-blue-dark, #084b8f);
+}
+
+.hint {
+  color: var(--ever-navy-muted);
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.hint[data-ready="true"] {
+  color: var(--ever-lime-ink, #4e7d0f);
+}

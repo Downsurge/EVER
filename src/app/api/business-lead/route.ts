@@ -13,12 +13,21 @@ export async function POST(request: NextRequest) {
   if (clean(form.get("website"), 200)) return Response.json({ ok: true });
 
   const market = clean(form.get("market"), 5) === "tx" ? "tx" : "az";
+  // Residential and business share this route so there is one email path,
+  // one validator and one attachment policy. Defaults to business, which is
+  // what every existing caller sends.
+  const kind = clean(form.get("kind"), 12) === "residential" ? "residential" : "business";
+  const isResidential = kind === "residential";
+  const kindTag = isResidential ? "[RESIDENTIAL]" : "[BUSINESS]";
   const brand = market === "tx" ? "EPER" : "EVER";
   const name = clean(form.get("name"),120), company = clean(form.get("company"),160), email = clean(form.get("email"),240), phone = clean(form.get("phone"),80), zip = clean(form.get("zip"),20), notes = clean(form.get("notes"),3000);
   let brief: { assets?: string[]; quantity?: string; priorities?: string[]; pickupNote?: string } = {};
   try { brief = JSON.parse(clean(form.get("brief"),8000) || "{}"); } catch {}
   const assets = cleanList(brief.assets), quantity = clean(brief.quantity,120), priorities = cleanList(brief.priorities), pickupNote = clean(brief.pickupNote,500);
-  if (!name || !company || !email || !zip || !assets.length || !quantity || !priorities.length || !validEmail(email)) return Response.json({ error: "Please complete the required fields." }, { status: 400 });
+  // A resident has no company, and is not asked to rank priorities.
+  const missingCore = !name || !email || !zip || !assets.length || !validEmail(email);
+  const missingBusiness = !isResidential && (!company || !quantity || !priorities.length);
+  if (missingCore || missingBusiness) return Response.json({ error: "Please complete the required fields." }, { status: 400 });
 
   const files = form.getAll("attachments").filter((value): value is File => value instanceof File && value.size > 0).slice(0,5);
   const maxFile = 5 * 1024 * 1024, maxTotal = 15 * 1024 * 1024;
@@ -34,10 +43,11 @@ export async function POST(request: NextRequest) {
 
   const attachments = await Promise.all(files.map(async (file) => ({ filename: file.name.replace(/[\r\n]/g," ").slice(0,160), content: Buffer.from(await file.arrayBuffer()).toString("base64") })));
   const assetsText = assets.join(", "), prioritiesText = priorities.join(", ");
-  const text = [`New ${brand} business pickup request`,`Market: ${market.toUpperCase()}`,`Name: ${name}`,`Company: ${company}`,`Email: ${email}`,`Phone: ${phone || "Not provided"}`,`ZIP: ${zip}`,`Equipment: ${assetsText}`,`Quantity: ${quantity}`,`Pickup: ${pickupNote}`,`Priorities: ${prioritiesText}`,`Notes: ${notes || "None"}`,`Attachments: ${files.length}`].join("\n");
-  const html = `<div style="font-family:Arial,sans-serif;color:#0b1b34;line-height:1.5"><h1 style="font-size:22px">New ${brand} business pickup request</h1><p><strong>Market:</strong> ${market.toUpperCase()}</p><p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Company:</strong> ${escapeHtml(company)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p><p><strong>ZIP:</strong> ${escapeHtml(zip)}</p><p><strong>Equipment:</strong> ${escapeHtml(assetsText)}</p><p><strong>Quantity:</strong> ${escapeHtml(quantity)}</p><p><strong>Pickup:</strong> ${escapeHtml(pickupNote)}</p><p><strong>Priorities:</strong> ${escapeHtml(prioritiesText)}</p><div style="margin-top:18px;padding:14px;background:#f4f7fb;border-radius:8px"><strong>Notes</strong><p>${escapeHtml(notes || "None")}</p></div></div>`;
+  const label = isResidential ? "residential drop-off enquiry" : "business pickup request";
+  const text = [`New ${brand} ${label}`,`Market: ${market.toUpperCase()}`,`Name: ${name}`,`Company: ${company || (isResidential ? "Residential" : "Not provided")}`,`Email: ${email}`,`Phone: ${phone || "Not provided"}`,`ZIP: ${zip}`,`Equipment: ${assetsText}`,`Quantity: ${quantity}`,`Pickup: ${pickupNote}`,`Priorities: ${prioritiesText}`,`Notes: ${notes || "None"}`,`Attachments: ${files.length}`].join("\n");
+  const html = `<div style="font-family:Arial,sans-serif;color:#0b1b34;line-height:1.5"><h1 style="font-size:22px">${kindTag} New ${brand} ${label}</h1><p><strong>Market:</strong> ${market.toUpperCase()}</p><p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Company:</strong> ${escapeHtml(company || (isResidential ? "Residential" : "Not provided"))}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p><p><strong>ZIP:</strong> ${escapeHtml(zip)}</p><p><strong>Equipment:</strong> ${escapeHtml(assetsText)}</p><p><strong>Quantity:</strong> ${escapeHtml(quantity)}</p><p><strong>Pickup:</strong> ${escapeHtml(pickupNote)}</p><p><strong>Priorities:</strong> ${escapeHtml(prioritiesText)}</p><div style="margin-top:18px;padding:14px;background:#f4f7fb;border-radius:8px"><strong>Notes</strong><p>${escapeHtml(notes || "None")}</p></div></div>`;
 
-  const response = await fetch("https://api.resend.com/emails", { method:"POST", headers:{Authorization:`Bearer ${apiKey}`,"Content-Type":"application/json","User-Agent":"ElectronicRecycle-Website/2.0"}, body:JSON.stringify({from,to:[to],reply_to:email,subject:`${brand} pickup request — ${company.replace(/[\r\n]+/g," ")}`,text,html,...(attachments.length?{attachments}:{})}) });
+  const response = await fetch("https://api.resend.com/emails", { method:"POST", headers:{Authorization:`Bearer ${apiKey}`,"Content-Type":"application/json","User-Agent":"ElectronicRecycle-Website/2.0"}, body:JSON.stringify({from,to:[to],reply_to:email,subject:`${kindTag} ${brand} ${isResidential ? "drop-off enquiry" : "pickup request"} — ${(company || name).replace(/[\r\n]+/g," ")}`,text,html,...(attachments.length?{attachments}:{})}) });
   if (!response.ok) { console.error("Resend business error", response.status, await response.text().catch(()=>"")); return Response.json({ error: "We couldn't send the request right now. Please try again shortly." }, { status: 502 }); }
   return Response.json({ ok: true });
 }

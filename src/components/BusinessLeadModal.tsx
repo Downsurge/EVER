@@ -18,12 +18,20 @@ export function BusinessLeadModal({
   open,
   onClose,
   brief,
+  kind = "business",
 }: {
   market: MarketKey;
   open: boolean;
   onClose: () => void;
   brief: BusinessBriefData;
+  /**
+   * Residents and businesses share this dialog. The only differences are
+   * whether a company is asked for and how the resulting email is labelled,
+   * which is not enough to justify a second form to keep in sync.
+   */
+  kind?: "business" | "residential";
 }) {
+  const isResidential = kind === "residential";
   const cfg = markets[market];
   const routes = marketRoutes(market);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -61,13 +69,14 @@ export function BusinessLeadModal({
     const form = new FormData(formElement);
     form.set("market", market);
     form.set("brief", JSON.stringify(brief));
+    form.set("kind", kind);
 
     try {
       const response = await fetch("/api/business-lead", { method: "POST", body: form });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(typeof data?.error === "string" ? data.error : "We couldn't send the request right now.");
       setStatus("success");
-      setMessage(`Your pickup request was sent. ${cfg.brandShort} can follow up using the contact information you provided.`);
+      setMessage(`Your ${isResidential ? "message" : "pickup request"} was sent. ${cfg.brandShort} can follow up using the contact information you provided.`);
       formElement.reset();
     } catch (error) {
       setStatus("error");
@@ -125,10 +134,12 @@ export function BusinessLeadModal({
                   <span>Name *</span>
                   <input name="name" autoComplete="name" required />
                 </label>
-                <label>
-                  <span>Company *</span>
-                  <input name="company" autoComplete="organization" required />
-                </label>
+                {isResidential ? null : (
+                  <label>
+                    <span>Company *</span>
+                    <input name="company" autoComplete="organization" required />
+                  </label>
+                )}
               </div>
 
               <div className={styles.twoCol}>

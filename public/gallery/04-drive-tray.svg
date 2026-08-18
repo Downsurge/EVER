@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Placeholder: DRIVE TRAY">
+  <rect width="800" height="600" fill="#eef3f8"/>
+  <rect x="14" y="14" width="772" height="572" fill="none" stroke="#0b1b34" stroke-width="3" stroke-dasharray="14 10" opacity="0.45"/>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <text x="400" y="255" font-size="34" font-weight="800" fill="#0b1b34" letter-spacing="3">DRIVE TRAY</text>
+    <text x="400" y="300" font-size="20" fill="#4c5c75">drives, close detail</text>
+    <text x="400" y="352" font-size="17" font-weight="700" fill="#0e7c8a">REPLACE ME</text>
+    <text x="400" y="392" font-size="15" fill="#4c5c75">public/gallery/04-drive-tray.svg</text>
+    <text x="400" y="424" font-size="15" fill="#4c5c75">4:3 - about 1600 x 1200</text>
+  </g>
+</svg>

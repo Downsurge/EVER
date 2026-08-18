@@ -1,5 +1,6 @@
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
+import { slideshow } from "@/data/images";
 
 /**
  * Reads whatever images are sitting in `public/gallery`. SERVER ONLY.
@@ -51,6 +52,16 @@ function altFromFilename(filename: string): string {
 }
 
 export function getGalleryImages(): readonly GalleryImage[] {
+  // An explicit list in src/data/images.ts wins, so remote URLs and a
+  // hand-picked order are possible. Leaving that list empty keeps the
+  // drop-a-file-in-the-folder behaviour, which is the default.
+  if (slideshow.length > 0) {
+    return slideshow.map((slot) => ({
+      src: slot.src,
+      alt: slot.alt,
+      fit: slot.src.toLowerCase().endsWith(".svg") ? ("contain" as const) : ("cover" as const),
+    }));
+  }
   try {
     const dir = join(process.cwd(), "public", "gallery");
     return readdirSync(dir)
