@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { check, clientIp, tooManyRequests } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -11,6 +12,12 @@ export async function POST(request: NextRequest) {
   const form = await request.formData().catch(() => null);
   if (!form) return Response.json({ error: "Invalid request." }, { status: 400 });
   if (clean(form.get("website"), 200)) return Response.json({ ok: true });
+
+  // Rate limit AFTER the honeypot: a caught bot should not consume a real
+  // visitor's allowance from a shared address such as an office or a phone
+  // network. Counted per form, so one does not lock out the other.
+  const rate = check(clientIp(request), "lead");
+  if (!rate.ok) return tooManyRequests(rate.retryAfterSeconds);
 
   const market = clean(form.get("market"), 5) === "tx" ? "tx" : "az";
   // Residential and business share this route so there is one email path,

@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { check, clientIp, tooManyRequests } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -28,6 +29,9 @@ export async function POST(request: NextRequest) {
   }
 
   if (clean(body.website, 200)) return Response.json({ ok: true });
+
+  const rate = check(clientIp(request), "contact");
+  if (!rate.ok) return tooManyRequests(rate.retryAfterSeconds);
 
   const market = clean(body.market, 5) === "tx" ? "tx" : "az";
   const brand = market === "tx" ? "EPER" : "EVER";
