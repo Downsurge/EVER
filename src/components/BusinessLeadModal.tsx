@@ -180,7 +180,22 @@ export function BusinessLeadModal({
                 and <Link href={routes.acceptancePolicy}>Acceptance Policy</Link>.
               </p>
 
-              {status === "error" ? <p className={styles.error} role="alert">{message}</p> : null}
+              {status === "error" ? (
+                <div className={styles.error} role="alert">
+                  <p>{message}</p>
+                  {/* A failed send must not be a dead end. Whatever went wrong
+                      server side, the visitor still has something in front of
+                      them that reaches a human. */}
+                  {(cfg.phone || cfg.email) ? (
+                    <p className={styles.errorFallback}>
+                      You can also reach {cfg.brandShort} directly:{" "}
+                      {cfg.phone ? <a href={`tel:${cfg.phone}`}>{cfg.phone}</a> : null}
+                      {cfg.phone && cfg.email ? " or " : null}
+                      {cfg.email ? <a href={`mailto:${cfg.email}`}>{cfg.email}</a> : null}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
 
               <button type="submit" className={styles.submit} disabled={status === "sending"}>
                 {status === "sending" ? "Sending…" : "Send pickup request"}

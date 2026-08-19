@@ -226,3 +226,15 @@
   from { opacity: 0; transform: translateY(12px) scale(.985); }
   to { opacity: 1; transform: none; }
 }
+
+/* Fallback shown when a send fails, so the visitor still has a way through. */
+.errorFallback {
+  margin-top: .5rem;
+  font-weight: 700;
+}
+
+.errorFallback a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
