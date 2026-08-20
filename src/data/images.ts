@@ -59,3 +59,16 @@ export const imageSlots = {
 export function isRemote(src: string): boolean {
   return /^https?:\/\//i.test(src);
 }
+
+/**
+ * The four equipment cards on the homepage.
+ *
+ * Real photographs, supplied by the operator. Swap a path here to change a
+ * card; the labels and links live in HomeSections and stay put.
+ */
+export const deviceCards = {
+  phonesTablets: "/photos/phones-tablets.jpg",
+  monitors: "/photos/monitors.jpg",
+  components: "/photos/computer-components.jpg",
+  printers: "/photos/printers-scanners.webp",
+} as const;

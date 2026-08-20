@@ -6,6 +6,7 @@ import { markets, marketRoutes } from "@/data/markets";
 import { publishableCategories, statusLabel } from "@/data/accepted-items";
 import { publishableCities } from "@/data/service-areas";
 import { ItemIcon } from "./ItemIcon";
+import { deviceCards } from "@/data/images";
 import styles from "./HomeSections.module.css";
 
 function Arrow() {
@@ -66,10 +67,10 @@ export function EquipmentVisualScene({ market }: { market: MarketKey }) {
   const cfg = markets[market];
   const routes = marketRoutes(market);
   const visuals = [
-    { src: "/brand/device-phone.svg", label: "Phones & tablets", href: `${routes.residential}?item=phones-tablets` },
-    { src: "/brand/device-monitor.svg", label: "Monitors", href: `${routes.residential}?item=monitors` },
-    { src: "/brand/device-components.svg", label: "Computer components", href: `${routes.residential}?item=components` },
-    { src: "/brand/device-printer.svg", label: "Printers & scanners", href: `${routes.residential}?item=printers` },
+    { src: deviceCards.phonesTablets, label: "Phones & tablets", href: `${routes.residential}?item=phones-tablets` },
+    { src: deviceCards.monitors, label: "Monitors", href: `${routes.residential}?item=monitors` },
+    { src: deviceCards.components, label: "Computer components", href: `${routes.residential}?item=components` },
+    { src: deviceCards.printers, label: "Printers & scanners", href: `${routes.residential}?item=printers` },
   ];
 
   return (
